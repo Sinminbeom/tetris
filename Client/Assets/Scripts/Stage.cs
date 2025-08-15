@@ -10,6 +10,7 @@ public class Stage : MonoBehaviour
     public Transform backgroundNode;
     public Transform boardNode;
     public Transform tetrominoNode;
+    public GameObject gameoverPanel;
 
     [Header("Game Settings")]
     [Range(4, 40)]
@@ -29,50 +30,67 @@ public class Stage : MonoBehaviour
         halfWidth = Mathf.RoundToInt(boardWidth * 0.5f);
         halfHeight = Mathf.RoundToInt(boardHeight * 0.5f);
 
-        CreateBackground();
-
-        CreateColumns();
-
-        CreateTetromino();
+        gameoverPanel.SetActive(false);
 
         nextFallTime = Time.time + fallCycle;
+
+        CreateBackground();
+        CreateColumns();
+        CreateTetromino();        
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 moveDir = Vector3.zero;
-        bool isRotate = false;
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (gameoverPanel.activeSelf)
         {
-            moveDir.x = -1;
-
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else
         {
-            moveDir.x = 1;
-        }
+            Vector3 moveDir = Vector3.zero;
+            bool isRotate = false;
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            isRotate = true;
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            moveDir.y = -1;
-        }
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                moveDir.x = -1;
 
-        if (Time.time > nextFallTime)
-        {
-            nextFallTime = Time.time + fallCycle;
-            moveDir = Vector3.down;
-            isRotate = false;
-        }
+            }
+            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                moveDir.x = 1;
+            }
 
-        if (moveDir != Vector3.zero || isRotate)
-        {
-            MoveTetromino(moveDir, isRotate);
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                isRotate = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                moveDir.y = -1;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                while (MoveTetromino(Vector3.down, false))
+                {
+                }
+            }
+
+            if (Time.time > nextFallTime)
+            {
+                nextFallTime = Time.time + fallCycle;
+                moveDir = Vector3.down;
+                isRotate = false;
+            }
+
+            if (moveDir != Vector3.zero || isRotate)
+            {
+                MoveTetromino(moveDir, isRotate);
+            }
         }
     }
 
@@ -98,6 +116,11 @@ public class Stage : MonoBehaviour
                 AddToBoard(tetrominoNode);
                 CheckBoardColumn();
                 CreateTetromino();
+
+                if (!CanMoveTo(tetrominoNode))
+                {
+                    gameoverPanel.SetActive(true);
+                }
             }
 
             return false;
@@ -149,7 +172,9 @@ public class Stage : MonoBehaviour
     // 보드에 완성된 행이 있으면 삭제
     void CheckBoardColumn()
     {
-        foreach(Transform column in boardNode)
+        bool isCleared = false;
+
+        foreach (Transform column in boardNode)
         {
             if (column.childCount == boardWidth)
             {
@@ -158,6 +183,43 @@ public class Stage : MonoBehaviour
                     Destroy(tile.gameObject);
                 }
                 column.DetachChildren();
+                isCleared = true;
+            }
+        }
+
+        if (isCleared)
+        {
+            for (int i = 1; i < boardNode.childCount; ++i)
+            {
+                var column = boardNode.Find(i.ToString());
+
+                // 이미 비어 있는 행은 무시
+                if (column.childCount == 0)
+                    continue;
+
+                int emptyCol = 0;
+                int j = i - 1;
+                while (j >= 0)
+                {
+                    if (boardNode.Find(j.ToString()).childCount == 0)
+                    {
+                        emptyCol++;
+                    }
+                    j--;
+                }
+
+                if (emptyCol > 0)
+                {
+                    var targetColumn = boardNode.Find((i - emptyCol).ToString());
+
+                    while (column.childCount > 0)
+                    {
+                        Transform tile = column.GetChild(0);
+                        tile.parent = targetColumn;
+                        tile.transform.position += new Vector3(0, -emptyCol, 0);
+                    }
+                    column.DetachChildren();
+                }
             }
         }
     }
