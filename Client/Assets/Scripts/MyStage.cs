@@ -1,41 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class Stage : MonoBehaviour
+public class MyStage : abStage
 {
-    [Header("Editor Objects")]
-    public GameObject tilePrefab;
-    public Transform backgroundNode;
-    public Transform boardNode;
-    public Transform tetrominoNode;
-    public GameObject gameoverPanel;
+    Vector2 myBoardPos;
 
-    [Header("Game Settings")]
-    [Range(4, 40)]
-    public int boardWidth = 10;
-    [Range(5, 20)]
-    public int boardHeight = 20;
-    public float fallCycle = 1.0f;
+    int minWidth;
 
-    private int halfWidth;
-    private int halfHeight;
-
-    private float nextFallTime;
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        gameoverPanel.SetActive(false);
-
-        halfWidth = Mathf.RoundToInt(boardWidth * 0.5f);
-        halfHeight = Mathf.RoundToInt(boardHeight * 0.5f);
-
-        nextFallTime = Time.time + fallCycle;
-
-        CreateBackground();
-        CreateColumns();
+        base.Start();
         CreateTetromino();
     }
 
@@ -80,9 +53,9 @@ public class Stage : MonoBehaviour
                 }
             }
 
-            if (Time.time > nextFallTime)
+            if (Time.time > this.nextFallTime)
             {
-                nextFallTime = Time.time + fallCycle;
+                this.nextFallTime = Time.time + this.fallCycle;
                 moveDir = Vector3.down;
                 isRotate = false;
             }
@@ -135,7 +108,8 @@ public class Stage : MonoBehaviour
         for (int i = 0; i < root.childCount; ++i)
         {
             var node = root.GetChild(i);
-            int x = Mathf.RoundToInt(node.transform.position.x + halfWidth);
+
+            int x = Mathf.RoundToInt(node.transform.position.x - myBoardPos.x + halfWidth);
             int y = Mathf.RoundToInt(node.transform.position.y + halfHeight - 1);
 
             if (x < 0 || x > boardWidth - 1)
@@ -150,7 +124,6 @@ public class Stage : MonoBehaviour
                 return false;
 
         }
-
         return true;
     }
 
@@ -161,7 +134,7 @@ public class Stage : MonoBehaviour
         {
             Transform node = root.GetChild(0);
 
-            int x = Mathf.RoundToInt(node.transform.position.x + halfWidth);
+            int x = Mathf.RoundToInt(node.transform.position.x - myBoardPos.x + halfWidth);
             int y = Mathf.RoundToInt(node.transform.position.y + halfHeight - 1);
 
             node.parent = boardNode.Find(y.ToString());
@@ -224,29 +197,20 @@ public class Stage : MonoBehaviour
         }
     }
 
-    // 타일 생성
-    Tile CreateTile(Transform parent, Vector2 position, Color color, int order = 1)
+    protected override void CreateBackground()
     {
-        GameObject go = Instantiate(tilePrefab);
-        go.transform.parent = parent;
-        go.transform.localPosition = position;
+        Color color = Color.cyan;
 
-        Tile tile = go.GetComponent<Tile>();
-        tile.color = color;
-        tile.sortingOrder = order;
+        myBoardPos = new Vector2(leftX + Mathf.RoundToInt(camWidth * 0.25f), 0f);
 
-        return tile;
-    }
+        CreateTile(backgroundNode, myBoardPos, color, 0);
 
-    // 배경 타일을 생성
-    void CreateBackground()
-    {
+        // -5 + -10 = -15
+        // -5
+        this.minWidth = (int)myBoardPos.x - halfWidth;
 
-        Color color = Color.gray;
-
-        // 타일 보드
         color.a = 0.5f;
-        for (int x = -halfWidth; x < halfWidth; ++x)
+        for (int x = minWidth; x < -halfWidth; ++x)
         {
             for (int y = halfHeight; y > -halfHeight; --y)
             {
@@ -258,35 +222,34 @@ public class Stage : MonoBehaviour
         color.a = 1.0f;
         for (int y = halfHeight; y > -halfHeight; --y)
         {
-            CreateTile(backgroundNode, new Vector2(-halfWidth - 1, y), color, 0);
-            CreateTile(backgroundNode, new Vector2(halfWidth, y), color, 0);
+            CreateTile(backgroundNode, myBoardPos + new Vector2(-halfWidth - 1, y), color, 0);
+            CreateTile(backgroundNode, myBoardPos + new Vector2(halfWidth, y), color, 0);
         }
 
         // 아래 테두리
         for (int x = -halfWidth - 1; x <= halfWidth; ++x)
         {
-            CreateTile(backgroundNode, new Vector2(x, -halfHeight), color, 0);
+            CreateTile(backgroundNode, myBoardPos + new Vector2(x, -halfHeight), color, 0);
         }
     }
 
-    void CreateColumns()
+    protected override void CreateColumns()
     {
         for (int i = 0; i < boardHeight; ++i)
         {
             GameObject col = new GameObject((boardHeight - i - 1).ToString());
-            col.transform.position = new Vector3(0, halfHeight - i, 0);
+            col.transform.position = (Vector3) myBoardPos + new Vector3(0, halfHeight - i, 0);
             col.transform.parent = boardNode;
         }
     }
 
-    // 테트로미노 생성
-    void CreateTetromino()
+    protected override void CreateTetromino()
     {
         int index = Random.Range(0, 7);
         Color32 color = Color.white;
 
         tetrominoNode.rotation = Quaternion.identity;
-        tetrominoNode.position = new Vector2(0, halfHeight);
+        tetrominoNode.position = myBoardPos + new Vector2(0, halfHeight);
 
         switch (index)
         {
