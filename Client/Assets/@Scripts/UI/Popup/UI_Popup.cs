@@ -10,7 +10,7 @@ public class UI_Popup : UI_Base
         base.Awake();
 
         UICanvas = Managers.UI.SetCanvas(gameObject);
-        //PopupOpenAnimation(gameObject);
+        // PopupOpenAnimation(gameObject);
     }
 
     public virtual void ClosePopupUI()

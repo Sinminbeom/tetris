@@ -63,11 +63,10 @@ public class UI_TitleScene : UI_Scene
 
         GetObject((int)GameObjects.StartButton).BindEvent((evt) =>
         {
-            Debug.Log("OnClick");
-            Managers.Scene.LoadScene(EScene.GameScene);
+            Managers.Scene.LoadScene(EScene.SingleGameScene);
         });
 
-        //GetObject((int)GameObjects.StartButton).gameObject.SetActive(false);
+        GetObject((int)GameObjects.StartButton).gameObject.SetActive(false);
     }
 
     protected override void Start()
@@ -76,5 +75,25 @@ public class UI_TitleScene : UI_Scene
 
         // Load 시작
         State = TitleSceneState.AssetLoading;
+
+        Managers.Resource.LoadAllAsync<Object>("Preload", (key, count, totalCount) =>
+        {
+            GetText((int)Texts.StatusText).text = $"TODO 로딩중 : {key} {count}/{totalCount}";
+
+            if (count == totalCount)
+            {
+                OnAssetLoaded();
+            }
+        });
+    }
+
+    private void OnAssetLoaded()
+    {
+        // State = TitleSceneState.AssetLoaded;
+
+        // Debug.Log("Connecting To Server");
+        // State = TitleSceneState.ConnectingToServer;
+
+        GetObject((int)GameObjects.StartButton).gameObject.SetActive(true);
     }
 }

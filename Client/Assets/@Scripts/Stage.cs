@@ -46,7 +46,7 @@ public class Stage : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+                Managers.Scene.LoadScene(Define.EScene.SingleGameScene);
             }
         }
         else

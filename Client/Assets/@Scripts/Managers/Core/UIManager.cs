@@ -17,7 +17,26 @@ public class UIManager
         get { return _sceneUI; }
     }
 
+    public GameObject Root
+    {
+        get
+        {
+            GameObject root = GameObject.Find("@UI_Root");
+            if (root == null)
+                root = new GameObject { name = "@UI_Root" };
+            return root;
+        }
+    }
+
     private Dictionary<string, UI_Popup> _popups = new Dictionary<string, UI_Popup>();
+
+    public UI_Popup GetPopupUI(string key)
+    {
+        if (_popups.ContainsKey(key) && _popups[key] != null)
+            return _popups[key];
+
+        return null;
+    }
 
     public Canvas SetCanvas(GameObject go, bool sort = true, int sortOrder = 0)
     {
@@ -46,6 +65,28 @@ public class UIManager
         return canvas;
     }
 
+    public T ShowPopupUI<T>(string name = null) where T : UI_Popup
+    {
+        if (string.IsNullOrEmpty(name))
+            name = typeof(T).Name;
+
+        if (_popups.TryGetValue(name, out UI_Popup popup) == false)
+        {
+            GameObject go = Managers.Resource.Instantiate(name);
+            popup = Utils.GetOrAddComponent<T>(go);
+            _popups[name] = popup;
+        }
+
+        _popupStack.Push(popup);
+
+        popup.transform.SetParent(Root.transform);
+        popup.gameObject.SetActive(true);
+        _pupupOrder++;
+        popup.UICanvas.sortingOrder = _pupupOrder;
+
+        return popup as T;
+    }
+
     public void ClosePopupUI(UI_Popup popup)
     {
         if (_popupStack.Count == 0)
@@ -67,6 +108,9 @@ public class UIManager
 
         UI_Popup popup = _popupStack.Pop();
         popup.gameObject.SetActive(false);
+
+        _popups.Remove(popup.name);
+
         _pupupOrder--;
     }
 
