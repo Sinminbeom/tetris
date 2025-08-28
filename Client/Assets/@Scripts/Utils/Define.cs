@@ -9,6 +9,7 @@ public class Define
         Unknown,
         TitleScene,
         GameScene,
+        SingleGameScene
     }
     public enum ETouchEvent
     {

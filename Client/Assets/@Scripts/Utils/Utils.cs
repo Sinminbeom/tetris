@@ -53,4 +53,14 @@ public static class Utils
 
         return null;
     }
+
+    public static GameObject CreateObject(string name)
+    {
+        GameObject go = GameObject.Find(name);
+        if (go == null)
+        {
+            go = new GameObject { name = name };
+        }
+        return go;
+    }
 }
