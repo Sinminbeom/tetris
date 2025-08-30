@@ -15,29 +15,40 @@ public class LockedState : abState
         StateComponents stateComponents = GetStateComponents();
         Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
 
-        Managers.Board.AddObject(tetromino.transform);
-        Managers.Object.Spawn();
-        Managers.Board.CheckCompleteRow();
+        // OnEnter와 OnProcOnce 호출 시기 확인하기
+        //if (Managers.Board.CanMove(tetromino))
+        //{
+        //    Managers.Board.AddObject(tetromino.transform);
+        //    Managers.Object.Spawn();
+        //    Managers.Board.CheckCompleteRow();
+        //}
     }
 
     public override void OnLeave()
     {
-        StateComponents stateComponents = GetStateComponents();
-        Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
-
-        if (!Managers.Board.CanMove(tetromino))
-            Managers.UI.ShowPopupUI<UI_GamePopup>();
     }
 
     public override void OnProcEveryFrame()
     {
-        StateComponents stateComponents = GetStateComponents();
-        Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
-        stateComponents.ChangeState((int)E_TETROMINO_STATE.Falling);
+        
     }
 
     public override void OnProcOnce()
     {
-        
+        StateComponents stateComponents = GetStateComponents();
+        Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
+
+        if (Managers.Board.CanMove(tetromino))
+        {
+            Managers.Board.AddObject(tetromino.transform);
+            Managers.Object.Spawn();
+            Managers.Board.CheckCompleteRow();
+
+            stateComponents.ChangeState((int)E_TETROMINO_STATE.Falling);
+        }
+        else
+        {
+            stateComponents.ChangeState((int)E_TETROMINO_STATE.Idle);
+        }
     }
 }

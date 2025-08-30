@@ -89,10 +89,7 @@ public class UI_TitleScene : UI_Scene
 
     private void OnAssetLoaded()
     {
-        // State = TitleSceneState.AssetLoaded;
-
-        // Debug.Log("Connecting To Server");
-        // State = TitleSceneState.ConnectingToServer;
+        State = TitleSceneState.AssetLoaded;
 
         GetObject((int)GameObjects.StartButton).gameObject.SetActive(true);
     }

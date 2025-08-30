@@ -5,7 +5,9 @@ public enum E_TETROMINO_STATE
 {
     Idle,
     Falling,
-    Moving,
+    DownMoving,
+    LeftMoving,
+    RightMoving,
     Rotating,
     Dropping,
     Locked
