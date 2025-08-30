@@ -70,17 +70,6 @@ public class BoardManager
             tetromino.transform.position = oldPos;
             tetromino.transform.rotation = oldRot;
 
-            if (pos.y == -1 && pos.x == 0 && !isRotate)
-            {
-                Managers.Board.AddObject(tetromino.transform);
-                Managers.Object.Spawn();
-                CheckCompleteRow();
-
-                if (!CanMove(tetromino))
-                {
-                    Managers.UI.ShowPopupUI<UI_GamePopup>();
-                }
-            }
             return false;
         }
 
