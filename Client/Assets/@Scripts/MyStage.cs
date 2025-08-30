@@ -6,14 +6,14 @@ public class MyStage : abStage
 
     int minWidth;
 
-    private void Start()
+    protected override void Start()
     {
         base.Start();
         CreateTetromino();
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         if (gameoverPanel.activeSelf)
         {

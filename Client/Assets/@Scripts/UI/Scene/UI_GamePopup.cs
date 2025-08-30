@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UI_GamePopup : UI_Popup
 {
-    void Awake()
+    protected override void Awake()
     {
         base.Awake();
 
@@ -12,12 +12,12 @@ public class UI_GamePopup : UI_Popup
         UICanvas.worldCamera = Camera.main;
     }
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         
     }

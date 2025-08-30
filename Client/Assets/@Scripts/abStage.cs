@@ -30,7 +30,7 @@ public abstract class abStage : MonoBehaviour
     protected float rightX;
 
     // Start is called before the first frame update
-    protected void Start()
+    protected virtual void Start()
     {
 
         gameoverPanel.SetActive(false);
@@ -49,7 +49,7 @@ public abstract class abStage : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         
     }
