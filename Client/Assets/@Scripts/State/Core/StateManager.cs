@@ -34,9 +34,7 @@ public class StateManager
     {
 
         if (currentState.HasValue)
-        {
             GetState(currentState.Value).OnLeave();
-        }
 
         currentState = stateId;
         GetState(stateId).BaseOnEnter(stateParamDto);

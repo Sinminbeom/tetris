@@ -20,24 +20,7 @@ public class Tetromino : BaseObject
     {
         base.Update();
 
-        //Debug.Log(stateComponents.stateManager.GetCurrentState());
-
-        stateComponents.OnProcEveryFrame();
         stateComponents.OnChangeState();
-
-        //UI_Popup popup = Managers.UI.GetPopupUI("UI_GamePopup");
-        //if (popup != null && popup.gameObject.activeSelf)
-        //{
-        //    if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-        //    {
-        //        Managers.UI.ClosePopupUI();
-        //        Managers.Scene.LoadScene(Define.EScene.SingleGameScene);
-        //    }
-        //}
-        //else
-        //{
-        //    stateComponents.OnProcEveryFrame();
-        //    stateComponents.OnChangeState();
-        //}
+        stateComponents.OnProcEveryFrame();
     }
 }
