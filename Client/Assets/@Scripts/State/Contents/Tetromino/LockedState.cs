@@ -15,13 +15,12 @@ public class LockedState : abState
         StateComponents stateComponents = GetStateComponents();
         Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
 
-        // OnEnter와 OnProcOnce 호출 시기 확인하기
-        //if (Managers.Board.CanMove(tetromino))
-        //{
-        //    Managers.Board.AddObject(tetromino.transform);
-        //    Managers.Object.Spawn();
-        //    Managers.Board.CheckCompleteRow();
-        //}
+        if (Managers.Board.CanMove(tetromino))
+        {
+            Managers.Board.AddObject(tetromino.transform);
+            Managers.Object.Spawn();
+            Managers.Board.CheckCompleteRow();
+        }
     }
 
     public override void OnLeave()
@@ -40,10 +39,6 @@ public class LockedState : abState
 
         if (Managers.Board.CanMove(tetromino))
         {
-            Managers.Board.AddObject(tetromino.transform);
-            Managers.Object.Spawn();
-            Managers.Board.CheckCompleteRow();
-
             stateComponents.ChangeState((int)E_TETROMINO_STATE.Falling);
         }
         else

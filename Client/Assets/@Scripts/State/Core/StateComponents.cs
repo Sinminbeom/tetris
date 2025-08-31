@@ -15,9 +15,7 @@ public class StateComponents
         this.parentProcess = parentProcess;
 
         if (initState.HasValue)
-        {
             ChangeState(initState.Value);
-        }
     }
 
     public object GetParentProcess()
@@ -43,9 +41,7 @@ public class StateComponents
     {
         var currentState = stateManager.GetCurrentState();
         if (currentState != null)
-        {
             currentState.OnProcOnce();
-        }
     }
 
     public void OnProcEveryFrame()
