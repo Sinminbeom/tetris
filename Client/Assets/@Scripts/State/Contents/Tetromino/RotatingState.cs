@@ -14,7 +14,8 @@ public class RotatingState : abState
         StateComponents stateComponents = GetStateComponents();
         Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
 
-        Managers.Board.MoveTo(tetromino, Vector3.zero, true);
+        //Managers.SingleBoard.MoveTo(tetromino, Vector3.zero, true);
+        Managers.MyBoard.MoveTo(tetromino, Vector3.zero, true);
     }
 
     public override void OnLeave()

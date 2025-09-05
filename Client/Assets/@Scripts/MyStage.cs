@@ -216,7 +216,7 @@ public class MyStage : abStage
             {
                 CreateTile(backgroundNode, new Vector2(x, y), color, 0);
             }
-        }
+        }       
 
         // аб©Л ев╣н╦╝
         color.a = 1.0f;

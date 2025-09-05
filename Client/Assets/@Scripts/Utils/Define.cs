@@ -9,7 +9,8 @@ public class Define
         Unknown,
         TitleScene,
         GameScene,
-        SingleGameScene
+        SingleGameScene,
+        MultiGameScene
     }
     public enum ETouchEvent
     {
@@ -20,5 +21,13 @@ public class Define
         BeginDrag,
         Drag,
         EndDrag,
+    }
+
+    // protobuf·Î »¬ °Í
+    public enum EObjectType
+    {
+        SingleTetromino,
+        MyTetromino,
+        EnemyTetromino
     }
 }
