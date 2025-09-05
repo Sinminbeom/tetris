@@ -14,7 +14,8 @@ public class RightMovingState : abState
         StateComponents stateComponents = GetStateComponents();
         Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
 
-        Managers.Board.MoveTo(tetromino, Vector3.right, false);
+        //Managers.SingleBoard.MoveTo(tetromino, Vector3.right, false);
+        Managers.MyBoard.MoveTo(tetromino, Vector3.right, false);
 
     }
 

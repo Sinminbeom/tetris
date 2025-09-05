@@ -17,7 +17,8 @@ public class IdleState : abState
     public override void OnLeave()
     {
         Managers.UI.ClosePopupUI();
-        Managers.Scene.LoadScene(Define.EScene.SingleGameScene);
+        //Managers.Scene.LoadScene(Define.EScene.SingleGameScene);
+        Managers.Scene.LoadScene(Define.EScene.MultiGameScene);
     }
 
     public override void OnProcEveryFrame()

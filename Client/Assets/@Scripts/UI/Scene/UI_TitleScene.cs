@@ -63,7 +63,8 @@ public class UI_TitleScene : UI_Scene
 
         GetObject((int)GameObjects.StartButton).BindEvent((evt) =>
         {
-            Managers.Scene.LoadScene(EScene.SingleGameScene);
+            //Managers.Scene.LoadScene(EScene.SingleGameScene);
+            Managers.Scene.LoadScene(EScene.MultiGameScene);
         });
 
         GetObject((int)GameObjects.StartButton).gameObject.SetActive(false);

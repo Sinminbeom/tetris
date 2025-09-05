@@ -14,7 +14,8 @@ public class DownMovingState : abState
         StateComponents stateComponents = GetStateComponents();
         Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
 
-        Managers.Board.MoveTo(tetromino, Vector3.down, false);
+        //Managers.SingleBoard.MoveTo(tetromino, Vector3.down, false);
+        Managers.MyBoard.MoveTo(tetromino, Vector3.down, false);
 
     }
 

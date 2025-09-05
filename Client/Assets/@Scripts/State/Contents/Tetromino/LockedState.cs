@@ -15,11 +15,18 @@ public class LockedState : abState
         StateComponents stateComponents = GetStateComponents();
         Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
 
-        if (Managers.Board.CanMove(tetromino))
+        //if (Managers.SingleBoard.CanMove(tetromino))
+        //{
+        //    Managers.SingleBoard.AddObject(tetromino.transform);
+        //    Managers.SingleObject.Spawn();
+        //    Managers.SingleBoard.CheckCompleteRow();
+        //}
+
+        if (Managers.MyBoard.CanMove(tetromino))
         {
-            Managers.Board.AddObject(tetromino.transform);
-            Managers.Object.Spawn();
-            Managers.Board.CheckCompleteRow();
+            Managers.MyBoard.AddObject(tetromino.transform);
+            Managers.MultiObject.Spawn();
+            Managers.MyBoard.CheckCompleteRow();
         }
     }
 
@@ -37,7 +44,8 @@ public class LockedState : abState
         StateComponents stateComponents = GetStateComponents();
         Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
 
-        if (Managers.Board.CanMove(tetromino))
+        //if (Managers.SingleBoard.CanMove(tetromino))
+        if (Managers.MyBoard.CanMove(tetromino))
         {
             stateComponents.ChangeState((int)E_TETROMINO_STATE.Falling);
         }

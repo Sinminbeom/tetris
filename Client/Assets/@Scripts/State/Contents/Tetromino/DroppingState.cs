@@ -14,7 +14,8 @@ public class DroppingState : abState
         StateComponents stateComponents = GetStateComponents();
         Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
 
-        while (Managers.Board.MoveTo(tetromino, Vector3.down, false)) { }
+        //while (Managers.SingleBoard.MoveTo(tetromino, Vector3.down, false)) { }
+        while (Managers.MyBoard.MoveTo(tetromino, Vector3.down, false)) { }
     }
 
     public override void OnLeave()
@@ -24,13 +25,12 @@ public class DroppingState : abState
 
     public override void OnProcEveryFrame()
     {
-        
+        StateComponents stateComponents = GetStateComponents();
+        Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
+        stateComponents.ChangeState((int)E_TETROMINO_STATE.Locked);
     }
 
     public override void OnProcOnce()
     {
-        StateComponents stateComponents = GetStateComponents();
-        Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
-        stateComponents.ChangeState((int)E_TETROMINO_STATE.Locked);
     }
 }

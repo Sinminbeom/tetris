@@ -9,13 +9,32 @@ public class Managers : MonoBehaviour
 
     #region Contents
 
-    private BoardManager _board = new BoardManager();
-    private BackgroundManager _background = new BackgroundManager();
-    private ObjectManager _object = new ObjectManager();
+    //private BoardManager _board = new BoardManager();
+    private SingleBoardManager _singleBoard = new SingleBoardManager();
+    private MyBoardManager _myBoard = new MyBoardManager();
+    private EnemyBoardManager _enemyBoard = new EnemyBoardManager();
 
-    public static BoardManager Board { get { return Instance?._board; } }
-    public static BackgroundManager Background { get { return Instance?._background; } }
-    public static ObjectManager Object { get { return Instance?._object; } }
+    //private BackgroundManager _background = new BackgroundManager();
+    private SingleBackgroundManager _singleBackground = new SingleBackgroundManager();
+    private MultiBackgroundManager _multiBackground = new MultiBackgroundManager();
+
+    //private ObjectManager _object = new ObjectManager();
+    private SingleObjectManager _singleObject = new SingleObjectManager();
+    private MultiObjectManager _multiObject = new MultiObjectManager();
+
+    //public static BoardManager Board { get { return Instance?._board; } }
+    public static SingleBoardManager SingleBoard { get { return Instance?._singleBoard; } }
+    public static MyBoardManager MyBoard { get { return Instance?._myBoard; } }
+    public static EnemyBoardManager EnemyBoard { get { return Instance?._enemyBoard; } }
+
+
+    //public static BackgroundManager Background { get { return Instance?._background; } }
+    public static SingleBackgroundManager SingleBackground { get { return Instance?._singleBackground; } }
+    public static MultiBackgroundManager MultiBackground { get { return Instance?._multiBackground; } }
+
+    //public static ObjectManager Object { get { return Instance?._object; } }
+    public static SingleObjectManager SingleObject { get { return Instance?._singleObject; } }
+    public static MultiObjectManager MultiObject { get { return Instance?._multiObject; } }
 
     #endregion
 
