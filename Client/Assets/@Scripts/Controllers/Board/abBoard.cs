@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public abstract class abBoard : IBoard
 {
@@ -11,7 +12,8 @@ public abstract class abBoard : IBoard
     public int halfHeight { get; protected set; }
 
     public float NextFallTime { get; set; }
-    public Dictionary<Vector2Int, Tile> _tiles = new Dictionary<Vector2Int, Tile>();
+
+    public Tile[,] _tiles;
 
     public GameObject Root { get; set; }
 
@@ -21,6 +23,8 @@ public abstract class abBoard : IBoard
 
     public abBoard()
     {
+        _tiles = new Tile[boardWidth, boardHeight];
+
         this.halfWidth = Mathf.RoundToInt(this.boardWidth * 0.5f);
         this.halfHeight = Mathf.RoundToInt(this.boardHeight * 0.5f);
 
@@ -53,9 +57,12 @@ public abstract class abBoard : IBoard
                 return false;
 
             // 블록 충돌 체크
-            Vector2Int checkPos = new Vector2Int(x, y);
-            if (_tiles.ContainsKey(checkPos) && _tiles[checkPos] != null)
-                return false;
+            try
+            {
+                Vector2Int checkPos = new Vector2Int(x, y);
+                if (_tiles[checkPos.x, checkPos.y] != null)
+                    return false;
+            } catch { }
         }
 
         return true;
@@ -93,103 +100,55 @@ public abstract class abBoard : IBoard
             int y = Mathf.RoundToInt(node.transform.position.y + halfHeight - 1);
 
             Vector2Int pos = new Vector2Int(x, y);
-            _tiles[pos] = node.GetComponent<Tile>();
+            _tiles[pos.x, pos.y] = node.GetComponent<Tile>();
 
             node.parent = Root.transform;
         }
     }
 
-    // 완료
     public void CheckCompleteRow()
     {
-        bool isCleared = false;
-
-        int cnt = 0;
-
-        for (int y = 0; y < this.boardHeight; y++)
+        for (int y = 0; y < boardHeight; y++)
         {
-            for (int x = 0; x < this.boardWidth; x++)
+            bool fullRow = true;
+
+            // 해당 행이 다 차 있는지 확인
+            for (int x = 0; x < boardWidth; x++)
             {
-                Vector2Int pos = new Vector2Int(x, y);
-                if (_tiles.ContainsKey(pos) && _tiles[pos] != null)
+                if (_tiles[x, y] == null)
                 {
-                    cnt++;
+                    fullRow = false;
+                    break;
                 }
             }
 
-            if (cnt == this.boardWidth)
+            if (fullRow)
             {
-                DestroyRow(y);
-                isCleared = true;
-            }
-
-            cnt = 0;
-        }
-
-        if (isCleared)
-        {
-            for (int y = 1; y < this.boardHeight; ++y)
-            {
-                if (GetChildRowCount(y) == 0)
-                    continue;
-
-                int emptyY = 0;
-                int j = y - 1;
-                while (j >= 0)
+                // 행 제거
+                for (int x = 0; x < boardWidth; x++)
                 {
-                    if (GetChildRowCount(j) == 0)
+                    if (_tiles[x, y] != null)
                     {
-                        emptyY++;
+                        Managers.Resource.Destroy(_tiles[x, y].gameObject);
+                        _tiles[x, y] = null;
                     }
-                    j--;
                 }
 
-                if (emptyY > 0)
+                // 위에 있는 행들을 아래로 한 칸씩 내림
+                for (int yy = y + 1; yy < boardHeight; yy++)
                 {
-                    int targetY = y - emptyY;
-
-                    for (int x = 0; x < this.boardWidth; ++x)
+                    for (int x = 0; x < boardWidth; x++)
                     {
-                        Vector2Int dstPos = new Vector2Int(x, targetY);
-                        Vector2Int srcPos = new Vector2Int(x, y);
-
-                        if (_tiles.ContainsKey(srcPos) && _tiles[srcPos] != null)
+                        if (_tiles[x, yy] != null)
                         {
-                            _tiles[srcPos].transform.position += new Vector3(0, -emptyY, 0);
-                            _tiles[dstPos] = _tiles[srcPos];
-                            _tiles[srcPos] = null;
+                            _tiles[x, yy - 1] = _tiles[x, yy];
+                            _tiles[x, yy] = null;
+                            _tiles[x, yy - 1].transform.position += new Vector3(0, -1, 0);
                         }
                     }
                 }
-            }
-        }
-    }
 
-    // 그냥 써도 됌
-    public int GetChildRowCount(int y)
-    {
-        int cnt = 0;
-        for (int x = 0; x < this.boardWidth; x++)
-        {
-            Vector2Int pos = new Vector2Int(x, y);
-            if (_tiles.ContainsKey(pos) && _tiles[pos] != null)
-            {
-                cnt++;
-            }
-        }
-        return cnt;
-    }
-
-    // 그냥 써도 됌
-    public void DestroyRow(int y)
-    {
-        for (int x = 0; x < this.boardWidth; x++)
-        {
-            Vector2Int pos = new Vector2Int(x, y);
-            if (_tiles.ContainsKey(pos) && _tiles[pos] != null)
-            {
-                Managers.Resource.Destroy(_tiles[pos].gameObject);
-                _tiles[pos] = null;
+                y--;
             }
         }
     }
