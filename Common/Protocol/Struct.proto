@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package Protocol;
+option csharp_namespace = "Google.Protobuf.Protocol";
+
+import "Enum.proto";
+
+message RoomInfo 
+{
+	int32 roomId = 1;
+}
+
+message PositionInfo 
+{
+	EObjectState state = 1;
+	int32 posX = 2;
+	int32 posY = 3;
+}
+
+message ObjectInfo 
+{
+	int32 objectId = 1;
+	PositionInfo posInfo = 2;  
+}
+
+message TetrominoInfo
+{
+	ObjectInfo objectInfo = 1;
+}
+
+message PlayerInfo
+{
+	string name = 2;
+}

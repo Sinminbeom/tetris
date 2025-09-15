@@ -14,8 +14,8 @@ public class DroppingState : abState
         StateComponents stateComponents = GetStateComponents();
         Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
 
-        //while (Managers.SingleBoard.MoveTo(tetromino, Vector3.down, false)) { }
-        while (Managers.MyBoard.MoveTo(tetromino, Vector3.down, false)) { }
+        IBoard board = tetromino.Board;
+        while (board.MoveTo(Vector3.down, false)) { }
     }
 
     public override void OnLeave()

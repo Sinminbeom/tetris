@@ -1,3 +1,4 @@
+using System.Net;
 using UnityEngine;
 using static Define;
 
@@ -91,7 +92,30 @@ public class UI_TitleScene : UI_Scene
     private void OnAssetLoaded()
     {
         State = TitleSceneState.AssetLoaded;
+        //Managers.Data.Init();
+
+        Debug.Log("Connecting To Server");
+        State = TitleSceneState.ConnectingToServer;
+
+        // TODO юс╫ц
+        GetObject((int)GameObjects.StartButton).gameObject.SetActive(true);
+
+        //IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
+        //IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
+        //Managers.Network.GameServer.Connect(endPoint, OnConnectionSuccess, OnConnectionFailed);
+    }
+
+    private void OnConnectionSuccess()
+    {
+        Debug.Log("Connected To Server");
+        State = TitleSceneState.ConnectedToServer;
 
         GetObject((int)GameObjects.StartButton).gameObject.SetActive(true);
+    }
+
+    private void OnConnectionFailed()
+    {
+        Debug.Log("Failed To Connect To Server");
+        State = TitleSceneState.FailedToConnectToServer;
     }
 }

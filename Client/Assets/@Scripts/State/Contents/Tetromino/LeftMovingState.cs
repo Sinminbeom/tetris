@@ -14,9 +14,8 @@ public class LeftMovingState : abState
         StateComponents stateComponents = GetStateComponents();
         Tetromino tetromino = (Tetromino)stateComponents.GetParentProcess();
 
-        //Managers.SingleBoard.MoveTo(tetromino, Vector3.left, false);
-        Managers.MyBoard.MoveTo(tetromino, Vector3.left, false);
-
+        IBoard board = tetromino.Board;
+        board.MoveTo(Vector3.left, false);
     }
 
     public override void OnLeave()
