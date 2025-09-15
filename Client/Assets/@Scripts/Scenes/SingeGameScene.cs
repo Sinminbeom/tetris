@@ -10,9 +10,9 @@ public class SingleGameScene : BaseScene
         Debug.Log("@>> SingleGameScene Init()");
         SceneType = EScene.SingleGameScene;
 
-        Managers.SingleBoard.LoadBoard();
-        Managers.SingleBackground.LoadBackground();
-        Managers.SingleObject.LoadTetromino();
+        //Managers.SingleBoard.LoadBoard();
+        //Managers.SingleBackground.LoadBackground();
+        //Managers.SingleObject.LoadTetromino();
     }
 
 	protected override void Start()

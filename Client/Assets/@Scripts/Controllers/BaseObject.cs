@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 public class BaseObject : MonoBehaviour
 {
     public int ObjectId { get; set; }
-    // public virtual EGameObjectType ObjectType { get { return EGameObjectType.None; } }
+     public virtual EGameObjectType ObjectType { get { return EGameObjectType.None; } }
 
     protected virtual void Awake()
     {

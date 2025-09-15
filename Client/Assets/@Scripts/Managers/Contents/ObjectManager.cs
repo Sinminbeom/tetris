@@ -3,6 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
+public class ObjectManager
+{
+    public Tetromino Tetromino { get; set; }
+    public int tetrominoObjectId { get; } = 0;
+    Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
+
+    #region Roots
+
+    //public GameObject TetrominoRoot { get { return Utils.CreateObject("@Tetromino"); } }
+
+    #endregion
+
+    public GameObject FindById(int id)
+    {
+        GameObject go = null;
+        _objects.TryGetValue(id, out go);
+        return go;
+    }
+}
+
 /*
 public class ObjectManager
 {
@@ -121,8 +141,21 @@ public class ObjectManager
 
 }
 */
+/*
+public class ObjectManager
+{
+    protected Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
 
-public abstract class ObjectManager
+
+    public GameObject FindById(int id)
+    {
+        GameObject go = null;
+        _objects.TryGetValue(id, out go);
+        return go;
+    }
+}
+
+public abstract class ObjectManager2
 {
 
     protected Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
@@ -135,7 +168,7 @@ public abstract class ObjectManager
 
     public abstract void CreateTetromino();
 
-    public abstract MyTetromino Spawn();
+    public abstract MyTetromino2 Spawn();
 
     public GameObject FindById(int id)
     {
@@ -150,7 +183,7 @@ public abstract class ObjectManager
 public class SingleObjectManager : ObjectManager
 {
     // single
-    public MyTetromino SingleTetromino { get; set; }
+    public MyTetromino2 SingleTetromino { get; set; }
 
     #region Roots
     public GameObject SingleTetrominoRoot { get { return Utils.CreateObject("@SingleTetromino"); } }
@@ -160,7 +193,7 @@ public class SingleObjectManager : ObjectManager
     {
         _objects[(int)EObjectType.SingleTetromino] = SingleTetrominoRoot;
 
-        SingleTetromino = Utils.GetOrAddComponent<MyTetromino>(SingleTetrominoRoot);
+        SingleTetromino = Utils.GetOrAddComponent<MyTetromino2>(SingleTetrominoRoot);
         SingleTetromino.ObjectId = (int)EObjectType.SingleTetromino;
     }
 
@@ -249,7 +282,7 @@ public class SingleObjectManager : ObjectManager
 public class MultiObjectManager : ObjectManager
 {
     // multi
-    public MyTetromino MyTetromino { get; set; }
+    public MyTetromino2 MyTetromino { get; set; }
     public Tetromino EnemyTetromino { get; set; }
 
     #region Roots
@@ -261,7 +294,7 @@ public class MultiObjectManager : ObjectManager
     {
         _objects[(int)EObjectType.MyTetromino] = MyTetrominoRoot;
 
-        MyTetromino = Utils.GetOrAddComponent<MyTetromino>(MyTetrominoRoot);
+        MyTetromino = Utils.GetOrAddComponent<MyTetromino2>(MyTetrominoRoot);
         MyTetromino.ObjectId = (int)EObjectType.MyTetromino;
 
         _objects[(int)EObjectType.EnemyTetromino] = EnemyTetrominoRoot;
@@ -270,7 +303,7 @@ public class MultiObjectManager : ObjectManager
         EnemyTetromino.ObjectId = (int)EObjectType.EnemyTetromino;
     }
 
-    public override MyTetromino Spawn()
+    public override MyTetromino2 Spawn()
     {
         GameObject go = FindById((int)EObjectType.MyTetromino);
         Transform tetrominoNode = go.transform;
@@ -435,3 +468,4 @@ public class MultiObjectManager : ObjectManager
     }
 
 }
+*/

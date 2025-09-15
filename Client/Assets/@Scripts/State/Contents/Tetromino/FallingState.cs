@@ -33,19 +33,12 @@ public class FallingState : abState
         // PC
         HandleKeyboardInput(stateComponents);
 
-        //if (Time.time > Managers.SingleBoard.nextFallTime)
-        //{
-        //    Managers.SingleBoard.nextFallTime = Time.time + Managers.SingleBoard.fallCycle;
-        //    if (!Managers.SingleBoard.MoveTo(tetromino, Vector3Int.down, false))
-        //    {
-        //        stateComponents.ChangeState((int)E_TETROMINO_STATE.Locked);
-        //    }
-        //}
+        IBoard board = tetromino.Board;
 
-        if (Time.time > Managers.MyBoard.nextFallTime)
+        if (Time.time > board.NextFallTime)
         {
-            Managers.MyBoard.nextFallTime = Time.time + Managers.MyBoard.fallCycle;
-            if (!Managers.MyBoard.MoveTo(tetromino, Vector3Int.down, false))
+            board.NextFallTime = Time.time + board.FallCycle;
+            if (!board.MoveTo(Vector3.down, false))
             {
                 stateComponents.ChangeState((int)E_TETROMINO_STATE.Locked);
             }
