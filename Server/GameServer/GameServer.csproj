@@ -17,6 +17,12 @@
   </Target>
 
   <ItemGroup>
+    <Compile Remove="Game\Player\Enemy\**" />
+    <EmbeddedResource Remove="Game\Player\Enemy\**" />
+    <None Remove="Game\Player\Enemy\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.27.0" />
     <PackageReference Include="JWT" Version="10.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
@@ -47,10 +53,6 @@
     <None Update="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Game\Player\" />
   </ItemGroup>
 
 </Project>

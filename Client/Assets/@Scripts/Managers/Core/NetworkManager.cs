@@ -35,6 +35,7 @@ public class ServerInstance
 		_connector.OnSuccessCallback = () => { PushAction(onSuccessCallback); _connector.OnSuccessCallback = null; };
 		_connector.OnFailedCallback = () => { PushAction(onFailedCallback); _connector.OnFailedCallback = null; };
 		_connector.Connect(endPoint, () => { return _session; });
+
 	}
 
 	public void Update()
@@ -70,7 +71,7 @@ public class ServerInstance
 		lock (_lock)
 		{
 			_actionQueue.Enqueue(action);
-		}
+        }
 	}
 
 	void ExecuteAction()

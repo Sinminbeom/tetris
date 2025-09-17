@@ -13,8 +13,8 @@ namespace GameServer
 		object _lock = new object();
 		Dictionary<int, BaseObject> _gameobjects = new Dictionary<int, BaseObject>();
 
-		// [OBJ_TYPE(4)][TEMPLATE_ID(8)][ID(20)]
-		int _counter = 0;
+        // [OBJ_TYPE(4)][TEMPLATE_ID(8)][ID(20)]
+        int _counter = 0;
 
 		public T Spawn<T>(int templateId = 0) where T : BaseObject, new()
 		{
@@ -55,8 +55,8 @@ namespace GameServer
 
 			lock (_lock)
 			{
-				if (objectType == EGameObjectType.Tetromino)
-					return _tetrominos.Remove(objectId);
+				//if (objectType == EGameObjectType.Tetromino)
+				//	return _tetrominos.Remove(objectId);
 			}
 
 			return false;
@@ -70,8 +70,8 @@ namespace GameServer
 			{
 				if (objectType == EGameObjectType.Tetromino)
 				{
-					if (_tetrominos.TryGetValue(objectId, out Tetromino tetromino))
-						return tetromino;
+					//if (_tetrominos.TryGetValue(objectId, out Tetromino tetromino))
+					//	return tetromino;
 				}
 			}
 

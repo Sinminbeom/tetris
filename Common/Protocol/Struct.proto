@@ -30,5 +30,6 @@ message TetrominoInfo
 
 message PlayerInfo
 {
+	int32 playerId = 1;
 	string name = 2;
 }
