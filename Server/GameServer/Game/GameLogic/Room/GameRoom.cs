@@ -15,7 +15,7 @@ namespace GameServer
 		public int GameRoomId { get; set; }
 		public int TemplateId { get; set; }
 
-		Dictionary<int, IPlayer> _players = new Dictionary<int, IPlayer>();
+		Dictionary<int, Player> _players = new Dictionary<int, Player>();
 
 		public void Init(int mapTemplateId, int zoneCells)
 		{
