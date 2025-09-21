@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Define
 {
+    public const int MAX_LOBBY_ROOM_COUNT = 10;
     public enum EScene
     {
         Unknown,

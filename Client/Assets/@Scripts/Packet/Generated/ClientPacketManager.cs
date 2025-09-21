@@ -7,6 +7,10 @@ using System.Collections.Generic;
 public enum MsgId
 {
 	S_Connected = 1,
+	C_SignUpReq = 2,
+	S_SignUpRes = 3,
+	C_LogInReq = 4,
+	S_LogInRes = 5,
 }
 
 class PacketManager
@@ -29,7 +33,11 @@ class PacketManager
 	public void Register()
 	{		
 		_onRecv.Add((ushort)MsgId.S_Connected, MakePacket<S_Connected>);
-		_handler.Add((ushort)MsgId.S_Connected, PacketHandler.S_ConnectedHandler);
+		_handler.Add((ushort)MsgId.S_Connected, PacketHandler.S_ConnectedHandler);		
+		_onRecv.Add((ushort)MsgId.S_SignUpRes, MakePacket<S_SignUpRes>);
+		_handler.Add((ushort)MsgId.S_SignUpRes, PacketHandler.S_SignUpResHandler);		
+		_onRecv.Add((ushort)MsgId.S_LogInRes, MakePacket<S_LogInRes>);
+		_handler.Add((ushort)MsgId.S_LogInRes, PacketHandler.S_LogInResHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

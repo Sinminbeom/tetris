@@ -36,5 +36,17 @@ class PacketHandler
 
 		//room.Push(room.HandleMove, tetromino, movePacket);
 	}
+	
+	public static void C_SignUpReqHandler(PacketSession session, IMessage packet)
+	{
+        C_SignUpReq signUpReq = (C_SignUpReq)packet;
+        ClientSession clientSession = (ClientSession)session;
+        clientSession.HandleSignUpReq(signUpReq);
+    }
+
+	public static void C_LogInReqHandler(PacketSession session, IMessage packet)
+	{
+
+	}
 
 }

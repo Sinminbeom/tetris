@@ -1,56 +1,83 @@
+using Google.Protobuf.Protocol;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static Define;
+using Object = UnityEngine.Object;
 
 public class UI_TitleScene : UI_Scene
 {
-    private enum GameObjects
-    {
-        StartButton,
-    }
 
     private enum Texts
     {
+        StartText,
         StatusText,
     }
 
-    private enum TitleSceneState
+    private enum ETitleSceneState
     {
         None,
+
+        // 애셋 로딩
         AssetLoading,
         AssetLoaded,
-        ConnectingToServer,
-        ConnectedToServer,
-        FailedToConnectToServer,
+
+        // 인증 과정
+        LoginSuccess,
+        LoginFail,
+
+        // 서버 접속 과정
+        ConnectingToGameServer,
+        ConnectedToGameServer,
+        FailedToConnectToGameServer,
     }
 
-    TitleSceneState _state = TitleSceneState.None;
-
-    TitleSceneState State
+    ETitleSceneState _state = ETitleSceneState.None;
+    ETitleSceneState State
     {
         get { return _state; }
         set
         {
+            Debug.Log($"TitleSceneState : {_state} -> {value}");
+
             _state = value;
+
+            GetText(((int)Texts.StartText)).gameObject.SetActive(true);
+
             switch (value)
             {
-                case TitleSceneState.None:
+                case ETitleSceneState.None:
                     break;
-                case TitleSceneState.AssetLoading:
+                case ETitleSceneState.AssetLoading:
                     GetText((int)Texts.StatusText).text = $"TODO 로딩중";
+                    GetText(((int)Texts.StartText)).gameObject.SetActive(false);
                     break;
-                case TitleSceneState.AssetLoaded:
-                    GetText((int)Texts.StatusText).text = "TODO 로딩 완료";
+                case ETitleSceneState.AssetLoaded:
+                    GetText((int)Texts.StatusText).text = "TODO 로그인을 해주세요";
+                    GetText(((int)Texts.StartText)).gameObject.SetActive(false);
                     break;
-                case TitleSceneState.ConnectingToServer:
+                case ETitleSceneState.LoginSuccess:
+                    GetText((int)Texts.StatusText).text = "TODO 로그인 성공!";
+                    GetText((int)Texts.StartText).text = "TODO 화면을 터치하세요.";
+                    break;
+                case ETitleSceneState.LoginFail:
+                    GetText((int)Texts.StatusText).text = "TODO 로그인 실패";
+                    break;
+                case ETitleSceneState.ConnectingToGameServer:
                     GetText((int)Texts.StatusText).text = "TODO 서버 접속중";
                     break;
-                case TitleSceneState.ConnectedToServer:
+                case ETitleSceneState.ConnectedToGameServer:
                     GetText((int)Texts.StatusText).text = "TODO 서버 접속 성공";
+                    GetText((int)Texts.StartText).text = "TODO 화면을 터치하세요.";
                     break;
-                case TitleSceneState.FailedToConnectToServer:
+                case ETitleSceneState.FailedToConnectToGameServer:
                     GetText((int)Texts.StatusText).text = "TODO 서버 접속 실패";
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
         }
     }
@@ -59,16 +86,10 @@ public class UI_TitleScene : UI_Scene
     {
         base.Awake();
 
-        BindObjects(typeof(GameObjects));
         BindTexts(typeof(Texts));
 
-        GetObject((int)GameObjects.StartButton).BindEvent((evt) =>
-        {
-            //Managers.Scene.LoadScene(EScene.SingleGameScene);
-            Managers.Scene.LoadScene(EScene.MultiGameScene);
-        });
-
-        GetObject((int)GameObjects.StartButton).gameObject.SetActive(false);
+        GetText(((int)Texts.StartText)).gameObject.BindEvent(OnClickStartButton);
+        GetText(((int)Texts.StartText)).gameObject.SetActive(false);
     }
 
     protected override void Start()
@@ -76,7 +97,7 @@ public class UI_TitleScene : UI_Scene
         base.Start();
 
         // Load 시작
-        State = TitleSceneState.AssetLoading;
+        State = ETitleSceneState.AssetLoading;
 
         Managers.Resource.LoadAllAsync<Object>("Preload", (key, count, totalCount) =>
         {
@@ -91,31 +112,67 @@ public class UI_TitleScene : UI_Scene
 
     private void OnAssetLoaded()
     {
-        State = TitleSceneState.AssetLoaded;
-        //Managers.Data.Init();
+        State = ETitleSceneState.AssetLoaded;
 
-        Debug.Log("Connecting To Server");
-        State = TitleSceneState.ConnectingToServer;
+        ConnectToGameServer();
 
-        // TODO 임시
-        GetObject((int)GameObjects.StartButton).gameObject.SetActive(true);
-
-        //IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
-        //IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
-        //Managers.Network.GameServer.Connect(endPoint, OnConnectionSuccess, OnConnectionFailed);
+        // 로딩 완료되면 로그인
+        UI_LoginPopup popup = Managers.UI.ShowPopupUI<UI_LoginPopup>();
+        popup.SetInfo(OnLoginSuccess);
     }
 
-    private void OnConnectionSuccess()
+    private void OnClickStartButton(PointerEventData eventData)
     {
-        Debug.Log("Connected To Server");
-        State = TitleSceneState.ConnectedToServer;
 
-        GetObject((int)GameObjects.StartButton).gameObject.SetActive(true);
     }
 
-    private void OnConnectionFailed()
+    private void OnLoginSuccess(bool isSuccess)
     {
-        Debug.Log("Failed To Connect To Server");
-        State = TitleSceneState.FailedToConnectToServer;
+        if (isSuccess)
+            State = ETitleSceneState.LoginSuccess;
+        else
+            State = ETitleSceneState.LoginFail;
     }
+
+    private void ConnectToGameServer()
+    {
+        State = ETitleSceneState.ConnectingToGameServer;
+        IPAddress ipAddr = IPAddress.Parse("127.0.0.1");
+        IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
+        Managers.Network.GameServer.Connect(endPoint, OnGameServerConnectionSuccess, OnGameServerConnectionFailed);
+    }
+
+    private void OnGameServerConnectionSuccess()
+    {
+        State = ETitleSceneState.ConnectedToGameServer;
+    }
+
+    private void OnGameServerConnectionFailed()
+    {
+        State = ETitleSceneState.FailedToConnectToGameServer;
+    }
+
+    //public void OnAuthResHandler(S_AuthRes resPacket)
+    //{
+    //    if (State != ETitleSceneState.ConnectedToGameServer)
+    //        return;
+
+    //    if (resPacket.Success == false)
+    //        return;
+
+    //    // 게임서버가 인증 통과 해주면 캐릭터 목록 요청.
+    //    UI_SelectCharacterPopup popup = Managers.UI.ShowPopupUI<UI_SelectCharacterPopup>();
+    //    popup.SendHeroListReqPacket();
+    //}
+
+    //public void OnHeroListResHandler(S_HeroListRes resPacket)
+    //{
+    //    List<MyHeroInfo> heroes = resPacket.Heroes.ToList();
+
+    //    UI_SelectCharacterPopup popup = Managers.UI.GetLastPopupUI<UI_SelectCharacterPopup>();
+    //    if (popup == null)
+    //        popup = Managers.UI.ShowPopupUI<UI_SelectCharacterPopup>();
+
+    //    popup.SetInfo(heroes);
+    //}
 }

@@ -2,12 +2,9 @@
 {
     public class Player
     {
+        public string Email { get; set; }
         public string Name { get; set; }
-
-        private Board _board = new Board();
-        public Board Board { get; set; }
-
-
+        public Board Board { get; set; } = new Board();
     }
 
 }

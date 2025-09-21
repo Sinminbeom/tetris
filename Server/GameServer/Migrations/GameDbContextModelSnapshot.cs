@@ -35,92 +35,23 @@ namespace GameServer.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("PlayerDbId");
 
                     b.HasIndex("PlayerDbId");
 
                     b.ToTable("Player");
-                });
-
-            modelBuilder.Entity("GameServer.RoomDb", b =>
-                {
-                    b.Property<int>("RoomDbId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomDbId"));
-
-                    b.Property<DateTime>("CreateDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.HasKey("RoomDbId");
-
-                    b.HasIndex("RoomDbId");
-
-                    b.ToTable("Room");
-                });
-
-            modelBuilder.Entity("GameServer.RoomPlayerDb", b =>
-                {
-                    b.Property<int>("RoomPlayerDbId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomPlayerDbId"));
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PlayerDbId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomDbId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RoomPlayerDbId");
-
-                    b.HasIndex("PlayerDbId")
-                        .IsUnique();
-
-                    b.HasIndex("RoomDbId", "PlayerDbId")
-                        .IsUnique();
-
-                    b.ToTable("RoomPlayer");
-                });
-
-            modelBuilder.Entity("GameServer.RoomPlayerDb", b =>
-                {
-                    b.HasOne("GameServer.PlayerDb", "Player")
-                        .WithOne("RoomPlayer")
-                        .HasForeignKey("GameServer.RoomPlayerDb", "PlayerDbId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GameServer.RoomDb", "Room")
-                        .WithMany("RoomPlayers")
-                        .HasForeignKey("RoomDbId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Player");
-
-                    b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("GameServer.PlayerDb", b =>
-                {
-                    b.Navigation("RoomPlayer")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("GameServer.RoomDb", b =>
-                {
-                    b.Navigation("RoomPlayers");
                 });
 #pragma warning restore 612, 618
         }

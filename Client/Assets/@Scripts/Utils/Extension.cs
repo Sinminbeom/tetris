@@ -10,4 +10,17 @@ public static class Extensions
     {
         UI_Base.BindEvent(go, action, type);
     }
+
+    public static void DestroyChildren(this Transform t)
+    {
+        foreach (Transform child in t)
+        {
+            Managers.Resource.Destroy(child.gameObject);
+        }
+    }
+
+    public static void DestroyChildren(this GameObject go)
+    {
+        DestroyChildren(go.transform);
+    }
 }

@@ -66,7 +66,7 @@ namespace Server
 			}
 
 			// DB Test
-			DBManager.Instance.Push(DBManager.TestDB);
+			//DBManager.Instance.Push(DBManager.TestDB);
 
 			// GameLogic
 			Thread.CurrentThread.Name = "GameLogic";
