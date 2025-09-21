@@ -36,11 +36,13 @@ namespace Google.Protobuf.Protocol {
             "QkpFQ1RfVFlQRV9OT05FEAASHwobRUdBTUVfT0JKRUNUX1RZUEVfVEVUUk9N",
             "SU5PEAEqXAoKRVJvb21TdGF0ZRIXChNFUk9PTV9TVEFURV9XQUlUSU5HEAAS",
             "GwoXRVJPT01fU1RBVEVfSU5fUFJPR1JFU1MQARIYChRFUk9PTV9TVEFURV9G",
-            "SU5JU0hFRBACQhuqAhhHb29nbGUuUHJvdG9idWYuUHJvdG9jb2xiBnByb3Rv",
-            "Mw=="));
+            "SU5JU0hFRBACKm8KDUVTaWduVXBSZXN1bHQSGAoURVNJR05fVVBfUkVTVUxU",
+            "X05PTkUQABIbChdFU0lHTl9VUF9SRVNVTFRfU1VDQ0VTUxABEicKI0VTSUdO",
+            "X1VQX1JFU1VMVF9GQUlMX0RVUExJQ0FURV9OQU1FEAJCG6oCGEdvb2dsZS5Q",
+            "cm90b2J1Zi5Qcm90b2NvbGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Protocol.EObjectState), typeof(global::Google.Protobuf.Protocol.ETetrominoState), typeof(global::Google.Protobuf.Protocol.EGameObjectType), typeof(global::Google.Protobuf.Protocol.ERoomState), }, null, null));
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Protocol.EObjectState), typeof(global::Google.Protobuf.Protocol.ETetrominoState), typeof(global::Google.Protobuf.Protocol.EGameObjectType), typeof(global::Google.Protobuf.Protocol.ERoomState), typeof(global::Google.Protobuf.Protocol.ESignUpResult), }, null, null));
     }
     #endregion
 
@@ -72,6 +74,12 @@ namespace Google.Protobuf.Protocol {
     [pbr::OriginalName("EROOM_STATE_WAITING")] Waiting = 0,
     [pbr::OriginalName("EROOM_STATE_IN_PROGRESS")] InProgress = 1,
     [pbr::OriginalName("EROOM_STATE_FINISHED")] Finished = 2,
+  }
+
+  public enum ESignUpResult {
+    [pbr::OriginalName("ESIGN_UP_RESULT_NONE")] None = 0,
+    [pbr::OriginalName("ESIGN_UP_RESULT_SUCCESS")] Success = 1,
+    [pbr::OriginalName("ESIGN_UP_RESULT_FAIL_DUPLICATE_NAME")] FailDuplicateName = 2,
   }
 
   #endregion

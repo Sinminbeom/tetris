@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Protobuf.Protocol;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,7 +19,31 @@ namespace GameServer
 			}
 		}
 
-		/*
+        public static PlayerDb CreatePlayerDb(C_SignUpReq signUpReq)
+        {
+            using (GameDbContext db = new GameDbContext())
+            {
+                PlayerDb playerDb = db.Players.Where(p => p.Name == signUpReq.Name).FirstOrDefault();
+				if (playerDb != null)
+					return null;
+
+                playerDb = new PlayerDb()
+				{
+					Name = signUpReq.Name,
+					Email = signUpReq.Email,
+					Password = signUpReq.Password
+				};
+
+                db.Players.Add(playerDb);
+
+                if (db.SaveChangesEx())
+					return playerDb;
+
+				return null;
+            }
+        }
+
+        /*
 		public static void EquipItemNoti(Player player, Item item)
 		{
 			if (player == null || item == null)
@@ -47,5 +72,5 @@ namespace GameServer
 			});
 		}
 		*/
-	}
+    }
 }

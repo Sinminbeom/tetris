@@ -8,6 +8,7 @@ import "Enum.proto";
 message RoomInfo 
 {
 	int32 roomId = 1;
+	string name = 2;
 }
 
 message PositionInfo 

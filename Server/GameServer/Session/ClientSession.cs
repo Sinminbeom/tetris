@@ -10,8 +10,9 @@ namespace Server
 		public long AccountDbId { get; set; }
 		public int SessionId { get; set; }
 
-		public Tetromino MyTetromino { get; set; }
-		object _lock = new object();
+		public Player MyPlayer { get; set; }
+        public List<Player> Players { get; set; } = new List<Player>();
+        object _lock = new object();
 
 		#region Network
 		// 예약만 하고 보내지는 않는다
@@ -45,7 +46,7 @@ namespace Server
 		{
             GameLogic.Instance.Push(() =>
             {
-                if (MyTetromino == null)
+                if (MyPlayer == null)
                     return;
 
                 GameRoom room = GameLogic.Instance.Find(1);

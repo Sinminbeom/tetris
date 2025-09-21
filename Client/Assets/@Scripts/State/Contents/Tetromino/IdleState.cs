@@ -23,15 +23,15 @@ public class IdleState : abState
 
     public override void OnProcEveryFrame()
     {
-        UI_Popup popup = Managers.UI.GetPopupUI("UI_GamePopup");
-        if (popup != null && popup.gameObject.activeSelf)
-        {
-            if (IsClicked())
-            {
-                StateComponents stateComponents = GetStateComponents();
-                stateComponents.ChangeState((int)E_TETROMINO_STATE.Falling);
-            }
-        }
+        //UI_Popup popup = Managers.UI.Get("UI_GameOverPopup");
+        //if (popup != null && popup.gameObject.activeSelf)
+        //{
+        //    if (IsClicked())
+        //    {
+        //        StateComponents stateComponents = GetStateComponents();
+        //        stateComponents.ChangeState((int)E_TETROMINO_STATE.Falling);
+        //    }
+        //}
     }
 
     public override void OnProcOnce()

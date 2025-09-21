@@ -9,3 +9,26 @@ import public "Struct.proto";
 message S_Connected 
 {
 }
+
+message C_SignUpReq
+{
+	string name = 1;
+	string email = 2;
+	string password = 3;
+}
+
+message S_SignUpRes
+{
+	ESignUpResult result = 1;
+}
+
+message C_LogInReq
+{
+	string email = 1;
+	string password = 2;
+}
+
+message S_LogInRes
+{
+	bool success = 1;
+}
