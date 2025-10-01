@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,8 +12,7 @@ public class UI_CreateRoomPopup : UI_Popup
 
     enum Buttons
     {
-        CreateRoomButton,
-        CloseButton,
+        CreateRoomButton
     }
 
     enum Texts
@@ -20,7 +20,9 @@ public class UI_CreateRoomPopup : UI_Popup
         RoomNameText,
         CreateLabelText,
     }
-    
+
+    //Action OnRoomChanged;
+
     protected override void Awake()
     {
         base.Awake();
@@ -29,13 +31,12 @@ public class UI_CreateRoomPopup : UI_Popup
         BindTexts(typeof(Texts));
 
         GetButton((int)Buttons.CreateRoomButton).gameObject.BindEvent(OnClickCreatePlayerButton);
-        GetButton((int)Buttons.CloseButton).gameObject.BindEvent(OnClickCloseButton);
     }
 
-    public void SetInfo(Action<int> action)
-    {
-
-    }
+    //public void SetInfo(Action onRoomChanged)
+    //{
+    //    OnRoomChanged = onRoomChanged;
+    //}
 
     void OnClickCreatePlayerButton(PointerEventData evt)
     {
@@ -44,17 +45,26 @@ public class UI_CreateRoomPopup : UI_Popup
         // 1) 서버로 C_CreateHeroReq 패킷 전송
         // 2) 서버에서 DB로 이름 체크 후 생성
         // 3) 서버에서 S_CreateHeroRes 패킷 답신
-        //C_CreateHeroReq reqPacket = new C_CreateHeroReq();
+        C_CreateRoomReq reqPacket = new C_CreateRoomReq();
 
-        //reqPacket.ClassType = GetClassType();
-        //reqPacket.Gender = GetGender();
-        //reqPacket.Name = GetName();
+        reqPacket.Name = GetName();
 
-        //Managers.Network.Send(reqPacket);
+        Managers.Network.Send(reqPacket);
     }
 
-    void OnClickCloseButton(PointerEventData evt)
+    public string GetName()
     {
-        ClosePopupUI();
+        return GetText((int)Texts.RoomNameText).text;
+    }
+
+    public void OnCreateRoomResHandler(S_CreateRoomRes createRoomRes)
+    {
+        //OnRoomChanged?.Invoke();
+        //ClosePopupUI();
+        if (createRoomRes.Result == ECreateRoomResult.Success)
+        {
+            UI_RoomPopup roomPopup = Managers.UI.ShowPopupUI<UI_RoomPopup>();
+            roomPopup.OnCreateRoomResHandler(createRoomRes);
+        }
     }
 }

@@ -10,7 +10,7 @@ public class CameraController : MonoBehaviour
 	private void Start()
 	{
 		Camera.main.orthographicSize = 12;
-	}
+    }
 
 	private void LateUpdate()
 	{

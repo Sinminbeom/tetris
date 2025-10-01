@@ -19,6 +19,22 @@ namespace GameServer
 			}
 		}
 
+		public static PlayerDb LogInPlayer(C_LogInReq logInReq)
+		{
+			using (GameDbContext db = new GameDbContext())
+			{
+				PlayerDb playerDb = db.Players
+					.Where(p => p.Email == logInReq.Email)
+					.Where(p => p.Password == logInReq.Password).FirstOrDefault();
+
+				return playerDb;
+                //if (playerDb == null)
+                //    return ELogInResult.FailIncorrectPassword;
+
+                //return ELogInResult.Success;
+            }
+		}
+
         public static PlayerDb CreatePlayerDb(C_SignUpReq signUpReq)
         {
             using (GameDbContext db = new GameDbContext())

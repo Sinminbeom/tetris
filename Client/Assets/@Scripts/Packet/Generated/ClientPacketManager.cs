@@ -11,6 +11,15 @@ public enum MsgId
 	S_SignUpRes = 3,
 	C_LogInReq = 4,
 	S_LogInRes = 5,
+	C_DeleteRoomReq = 6,
+	S_DeleteRoomRes = 7,
+	C_CreateRoomReq = 8,
+	S_CreateRoomRes = 9,
+	C_RoomListReq = 10,
+	S_RoomListRes = 11,
+	C_EnterGame = 12,
+	S_EnterGame = 13,
+	S_JoinGame = 14,
 }
 
 class PacketManager
@@ -37,7 +46,17 @@ class PacketManager
 		_onRecv.Add((ushort)MsgId.S_SignUpRes, MakePacket<S_SignUpRes>);
 		_handler.Add((ushort)MsgId.S_SignUpRes, PacketHandler.S_SignUpResHandler);		
 		_onRecv.Add((ushort)MsgId.S_LogInRes, MakePacket<S_LogInRes>);
-		_handler.Add((ushort)MsgId.S_LogInRes, PacketHandler.S_LogInResHandler);
+		_handler.Add((ushort)MsgId.S_LogInRes, PacketHandler.S_LogInResHandler);		
+		_onRecv.Add((ushort)MsgId.S_DeleteRoomRes, MakePacket<S_DeleteRoomRes>);
+		_handler.Add((ushort)MsgId.S_DeleteRoomRes, PacketHandler.S_DeleteRoomResHandler);		
+		_onRecv.Add((ushort)MsgId.S_CreateRoomRes, MakePacket<S_CreateRoomRes>);
+		_handler.Add((ushort)MsgId.S_CreateRoomRes, PacketHandler.S_CreateRoomResHandler);		
+		_onRecv.Add((ushort)MsgId.S_RoomListRes, MakePacket<S_RoomListRes>);
+		_handler.Add((ushort)MsgId.S_RoomListRes, PacketHandler.S_RoomListResHandler);		
+		_onRecv.Add((ushort)MsgId.S_EnterGame, MakePacket<S_EnterGame>);
+		_handler.Add((ushort)MsgId.S_EnterGame, PacketHandler.S_EnterGameHandler);		
+		_onRecv.Add((ushort)MsgId.S_JoinGame, MakePacket<S_JoinGame>);
+		_handler.Add((ushort)MsgId.S_JoinGame, PacketHandler.S_JoinGameHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

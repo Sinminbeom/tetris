@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GameServer;
+using Google.Protobuf.Protocol;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Server.Data;
-using GameServer;
 using ServerCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Google.Protobuf.Protocol;
 
 namespace Server
 {
@@ -24,7 +25,7 @@ namespace Server
                 signUpRes.Result = ESignUpResult.Success;
                 // 메모리에 캐싱
                 Player player = MakePlayerFromPlayerDb(playerDb);
-                Players.Add(player);
+                Player = player;
             }
             else
             {
@@ -34,13 +35,137 @@ namespace Server
             Send(signUpRes);
         }
 
-        public Player MakePlayerFromPlayerDb(PlayerDb playerDb)
+        public void HandleLonInReq(C_LogInReq logInReq)
         {
-            Player player = new Player()
+            S_LogInRes logInRes = new S_LogInRes();
+            logInRes.Result = ELogInResult.Success;
+
+            PlayerDb playerDb = DBManager.LogInPlayer(logInReq);
+
+            if (playerDb == null)
             {
-                Name = playerDb.Name,
-                Email = playerDb.Email,
-            };
+                logInRes.Result = ELogInResult.FailIncorrectPassword;
+            }
+            else
+            {
+                Player = MakePlayerFromPlayerDb(playerDb);
+                logInRes.PlayerInfo = Player.PlayerInfo;
+            }
+
+            Send(logInRes);
+        }
+
+        public void HandleRoomListReq(C_RoomListReq roomListReq)
+        {
+            S_RoomListRes roomListRes = new S_RoomListRes();
+
+            List<GameRoom> rooms = GameLogic.Instance.GameRooms;
+
+            Console.WriteLine($"rooms.Count = {rooms.Count}");
+
+            foreach (GameRoom room in rooms)
+            {
+                RoomInfo roomInfo = new RoomInfo();
+                roomInfo.Name = room.Name;
+                roomInfo.RoomId = room.RoomId;
+                roomInfo.Status = room.State;
+                roomInfo.PlayerCount = room.PlayerCount;
+                roomListRes.Rooms.Add(roomInfo);
+            }
+
+            Send(roomListRes);
+        }
+
+        public void HandleCreateRoomReq(C_CreateRoomReq createRoomReq)
+        {
+
+            GameLogic.Instance.Push(() => {
+                S_CreateRoomRes createRoomRes = new S_CreateRoomRes();
+
+                GameRoom room = GameLogic.Instance.GameRooms.FirstOrDefault(r => r.Name == createRoomReq.Name);
+
+                if (room == null)
+                {
+                    GameLogic.Instance.Add(Player, createRoomReq.Name);
+                    createRoomRes.Result = ECreateRoomResult.Success;
+                }
+                else
+                {
+                    createRoomRes.Result = ECreateRoomResult.FailDuplicateName;
+                }
+
+                Send(createRoomRes);
+
+                //GameRoom room = GameLogic.Instance.GetRooms().FirstOrDefault(r => r.Name == createRoomReq.Name);
+
+                //if (room == null)
+                //{
+                //    int roomId = GameLogic.Instance.Add(Player, createRoomReq.Name);
+                //    createRoomRes.RoomId = roomId;
+                //    createRoomRes.Result = ECreateRoomResult.Success;
+                //}
+                //else
+                //{
+                //    createRoomRes.Result = ECreateRoomResult.FailDuplicateName;
+                //}
+
+                //Send(createRoomRes);
+            });
+
+            //if (room == null)
+            //{
+            //    int roomId = GameLogic.Instance.Add();
+            //    createRoomRes.RoomId = roomId;
+            //    createRoomRes.Result = ECreateRoomResult.Success;
+            //}
+            //else
+            //{
+            //    createRoomRes.Result = ECreateRoomResult.FailDuplicateName;
+            //}
+
+            //Send(createRoomRes);
+        }
+
+        public void HandleDeleteRoomReq(C_DeleteRoomReq deleteRoomReq)
+        {
+            S_DeleteRoomRes deleteRoomRes = new S_DeleteRoomRes();
+
+            // TODO : 사람이 들어가 잇으면 안되고 게임중이면 안되고
+            GameLogic.Instance.Remove(deleteRoomReq.RoomIndex);
+
+            deleteRoomRes.Result = EDeleteRoomResult.Success;
+
+            Send(deleteRoomRes);
+        }
+
+        public void HandleEnterGame(C_EnterGame enterGamePacket)
+        {
+            GameRoom gameRoom = GameLogic.Instance.Find(enterGamePacket.RoomIndex);
+            gameRoom.EnterGame(Player);
+
+            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            S_EnterGame enterGame = new S_EnterGame();
+
+            if (otherPlayer != null)
+            {
+                enterGame.PlayerInfos.Add(otherPlayer.PlayerInfo);
+            }
+            //enterGame.RoomIndex = gameRoom.RoomId;
+            Send(enterGame);
+        }
+
+        Player MakePlayerFromPlayerDb(PlayerDb playerDb)
+        {
+            Player player = new Player();
+            {
+                player.PlayerId = playerDb.PlayerDbId;
+                player.Name = playerDb.Name;
+                player.Email = playerDb.Email;
+                player.Session = this;
+                player.PlayerInfo.Name = playerDb.Name;
+                player.PlayerInfo.PlayerId = playerDb.PlayerDbId;
+            }
 
             return player;
         }

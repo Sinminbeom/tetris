@@ -1,59 +1,63 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Text;
+using static Azure.Core.HttpHeader;
 
 namespace GameServer
 {
 	// GameLogic
 	// - GameRoom
-	// -- Zone
 	public class GameLogic : JobSerializer
 	{
 		public static GameLogic Instance { get; } = new GameLogic();
 
-		Dictionary<int, GameRoom> _rooms = new Dictionary<int, GameRoom>();
+		public List<GameRoom> GameRooms { get { return _rooms; } }
+
+		List<GameRoom> _rooms = new List<GameRoom>();
 		int _roomId = 1;
 
 		public void Update()
 		{
 			Flush();
 
-			foreach (GameRoom room in _rooms.Values)
+			foreach (GameRoom room in _rooms)
 			{
 				room.Update();
 			}
 		}
 
-		public GameRoom Add(int mapTemplateId)
+		public void Add(Player player, string name)
 		{
 			GameRoom gameRoom = new GameRoom();
-			gameRoom.Push(gameRoom.Init, mapTemplateId, 10);
+			gameRoom.hostPlayer = player;
+			gameRoom.Name = name;
+			gameRoom.RoomId = _roomId;
 
-			gameRoom.GameRoomId = _roomId;
-			_rooms.Add(_roomId, gameRoom);
-			_roomId++;
+            gameRoom.Push(gameRoom.Init);
 
-			return gameRoom;
+            gameRoom.EnterGame(player);
+
+            _rooms.Add(gameRoom);
+        }
+
+		public bool Remove(int roomIndex)
+		{
+			GameRoom gameRoom = _rooms[roomIndex];
+			return _rooms.Remove(gameRoom);
 		}
 
-		public bool Remove(int roomId)
+		public GameRoom Find(int roomIndex)
 		{
-			return _rooms.Remove(roomId);
-		}
-
-		public GameRoom Find(int roomId)
-		{
-			GameRoom room = null;
-			if (_rooms.TryGetValue(roomId, out room))
-				return room;
-
-			return null;
-		}
-
-		public List<GameRoom> GetRooms()
-		{
-			return _rooms.Values.ToList();
+            if (roomIndex >= 0 && roomIndex < _rooms.Count)
+            {
+                return _rooms[roomIndex];
+            }
+            else
+            {
+				return null;
+            }
 		}
 	}
 }

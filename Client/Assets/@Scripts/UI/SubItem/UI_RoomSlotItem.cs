@@ -12,23 +12,23 @@ public class UI_RoomSlotItem : UI_Base
 
     private enum Texts
     {
-        CharacterNameText,
-        ClassText,
-        LevelText,
+        RoomNameText,
+        RoomStatusText,
+        PlayerCountText
     }
     
     private enum Images
     {
-        CharacterFrameImage,
-        CharacterImage,
-        CharacterLevelFrameImage,
-        SelectHeroImage
+        RoomFrameImage,
+        RoomImage,
+        PlayerCountFrameImage,
+        SelectRoomImage
     }
 
     int _index;
     RoomInfo _info;
     bool _selected = false;
-	Action<int> _onHeroSelected;
+	Action<int> _onRoomSelected;
 
 	protected override void Awake()
     {
@@ -38,15 +38,15 @@ public class UI_RoomSlotItem : UI_Base
         BindTexts(typeof(Texts));    
         BindImages(typeof(Images));
 
-        GetImage((int)Images.SelectHeroImage).gameObject.BindEvent(OnClickSelectHeroImage);
+        GetImage((int)Images.SelectRoomImage).gameObject.BindEvent(OnClickSelectHeroImage);
     }
 
-    public void SetInfo(int index, RoomInfo info, bool selected, Action<int> onHeroSelected)
+    public void SetInfo(int index, RoomInfo info, bool selected, Action<int> onRoomSelected)
     {
         _index = index;
         _info = info;
         _selected = selected;
-        _onHeroSelected = onHeroSelected;
+        _onRoomSelected = onRoomSelected;
 		RefreshUI();
     }
 
@@ -55,19 +55,19 @@ public class UI_RoomSlotItem : UI_Base
         if (_info == null)
             return;
 
-		GetText((int)Texts.CharacterNameText).text = _info.Name;
-		//GetText((int)Texts.ClassText).text = _info.HeroInfo.ClassType.ToString();
-		//GetText((int)Texts.LevelText).text = _info.HeroInfo.Level.ToString();
+		GetText((int)Texts.RoomNameText).text = _info.Name;
+		GetText((int)Texts.RoomStatusText).text = _info.Status.ToString();
+        GetText((int)Texts.PlayerCountText).text = _info.PlayerCount.ToString();
 
 		if (_selected)
-            GetImage((int)Images.SelectHeroImage).color = new Color(0.8f, 0.8f, 0.15f, 0.15f);
+            GetImage((int)Images.SelectRoomImage).color = new Color(0.8f, 0.8f, 0.15f, 0.15f);
         else
-			GetImage((int)Images.SelectHeroImage).color = new Color(0.8f, 0.8f, 0.15f, 0);
+            GetImage((int)Images.SelectRoomImage).color = new Color(0.8f, 0.8f, 0.15f, 0);
 	}
 
     void OnClickSelectHeroImage(PointerEventData evt)
     {
-        _onHeroSelected?.Invoke(_index);
+        _onRoomSelected?.Invoke(_index);
 		RefreshUI();
 	}
 }

@@ -10,8 +10,7 @@ namespace Server
 		public long AccountDbId { get; set; }
 		public int SessionId { get; set; }
 
-		public Player MyPlayer { get; set; }
-        public List<Player> Players { get; set; } = new List<Player>();
+		public Player Player { get; set; }
         object _lock = new object();
 
 		#region Network
@@ -46,7 +45,7 @@ namespace Server
 		{
             GameLogic.Instance.Push(() =>
             {
-                if (MyPlayer == null)
+                if (Player == null)
                     return;
 
                 GameRoom room = GameLogic.Instance.Find(1);

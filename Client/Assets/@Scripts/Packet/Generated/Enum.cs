@@ -38,11 +38,18 @@ namespace Google.Protobuf.Protocol {
             "GwoXRVJPT01fU1RBVEVfSU5fUFJPR1JFU1MQARIYChRFUk9PTV9TVEFURV9G",
             "SU5JU0hFRBACKm8KDUVTaWduVXBSZXN1bHQSGAoURVNJR05fVVBfUkVTVUxU",
             "X05PTkUQABIbChdFU0lHTl9VUF9SRVNVTFRfU1VDQ0VTUxABEicKI0VTSUdO",
-            "X1VQX1JFU1VMVF9GQUlMX0RVUExJQ0FURV9OQU1FEAJCG6oCGEdvb2dsZS5Q",
-            "cm90b2J1Zi5Qcm90b2NvbGIGcHJvdG8z"));
+            "X1VQX1JFU1VMVF9GQUlMX0RVUExJQ0FURV9OQU1FEAIqbwoMRUxvZ0luUmVz",
+            "dWx0EhcKE0VMT0dfSU5fUkVTVUxUX05PTkUQABIaChZFTE9HX0lOX1JFU1VM",
+            "VF9TVUNDRVNTEAESKgomRUxPR19JTl9SRVNVTFRfRkFJTF9JTkNPUlJFQ1Rf",
+            "UEFTU1dPUkQQAipSChFFRGVsZXRlUm9vbVJlc3VsdBIcChhFREVMRVRFX1JP",
+            "T01fUkVTVUxUX05PTkUQABIfChtFREVMRVRFX1JPT01fUkVTVUxUX1NVQ0NF",
+            "U1MQASp/ChFFQ3JlYXRlUm9vbVJlc3VsdBIcChhFQ1JFQVRFX1JPT01fUkVT",
+            "VUxUX05PTkUQABIfChtFQ1JFQVRFX1JPT01fUkVTVUxUX1NVQ0NFU1MQARIr",
+            "CidFQ1JFQVRFX1JPT01fUkVTVUxUX0ZBSUxfRFVQTElDQVRFX05BTUUQAkIb",
+            "qgIYR29vZ2xlLlByb3RvYnVmLlByb3RvY29sYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Protocol.EObjectState), typeof(global::Google.Protobuf.Protocol.ETetrominoState), typeof(global::Google.Protobuf.Protocol.EGameObjectType), typeof(global::Google.Protobuf.Protocol.ERoomState), typeof(global::Google.Protobuf.Protocol.ESignUpResult), }, null, null));
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Protocol.EObjectState), typeof(global::Google.Protobuf.Protocol.ETetrominoState), typeof(global::Google.Protobuf.Protocol.EGameObjectType), typeof(global::Google.Protobuf.Protocol.ERoomState), typeof(global::Google.Protobuf.Protocol.ESignUpResult), typeof(global::Google.Protobuf.Protocol.ELogInResult), typeof(global::Google.Protobuf.Protocol.EDeleteRoomResult), typeof(global::Google.Protobuf.Protocol.ECreateRoomResult), }, null, null));
     }
     #endregion
 
@@ -80,6 +87,23 @@ namespace Google.Protobuf.Protocol {
     [pbr::OriginalName("ESIGN_UP_RESULT_NONE")] None = 0,
     [pbr::OriginalName("ESIGN_UP_RESULT_SUCCESS")] Success = 1,
     [pbr::OriginalName("ESIGN_UP_RESULT_FAIL_DUPLICATE_NAME")] FailDuplicateName = 2,
+  }
+
+  public enum ELogInResult {
+    [pbr::OriginalName("ELOG_IN_RESULT_NONE")] None = 0,
+    [pbr::OriginalName("ELOG_IN_RESULT_SUCCESS")] Success = 1,
+    [pbr::OriginalName("ELOG_IN_RESULT_FAIL_INCORRECT_PASSWORD")] FailIncorrectPassword = 2,
+  }
+
+  public enum EDeleteRoomResult {
+    [pbr::OriginalName("EDELETE_ROOM_RESULT_NONE")] None = 0,
+    [pbr::OriginalName("EDELETE_ROOM_RESULT_SUCCESS")] Success = 1,
+  }
+
+  public enum ECreateRoomResult {
+    [pbr::OriginalName("ECREATE_ROOM_RESULT_NONE")] None = 0,
+    [pbr::OriginalName("ECREATE_ROOM_RESULT_SUCCESS")] Success = 1,
+    [pbr::OriginalName("ECREATE_ROOM_RESULT_FAIL_DUPLICATE_NAME")] FailDuplicateName = 2,
   }
 
   #endregion

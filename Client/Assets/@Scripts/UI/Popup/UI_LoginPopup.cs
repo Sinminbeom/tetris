@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_LoginPopup : UI_Popup
+public class UI_LogInPopup : UI_Popup
 {
     enum GameObjects
     {
@@ -56,10 +56,28 @@ public class UI_LoginPopup : UI_Popup
         logInReq.Password = GetPassword();
 
         Managers.Network.Send(logInReq);
+    }
 
-        // TODO 확인
-        //_onClosePopup?.Invoke(true);
-        //ClosePopupUI();
+    public void OnLogInResHandler(S_LogInRes logInRes)
+    {
+        if (logInRes.Result == ELogInResult.Success)
+        {
+            _onClosePopup?.Invoke(true);
+            ClosePopupUI();
+
+            Debug.Log("=========================");
+            Debug.Log(logInRes.PlayerInfo);
+            Debug.Log(logInRes);
+            Debug.Log("=========================");
+            Managers.Player.Load(logInRes.PlayerInfo);
+
+            Managers.Scene.LoadScene(Define.EScene.LobbyScene);
+        }
+        else
+        {
+            // TODO : UI 표출
+            // logInRes.Result
+        }
     }
 
     string GetEmail()

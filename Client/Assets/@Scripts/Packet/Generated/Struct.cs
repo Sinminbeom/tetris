@@ -24,19 +24,20 @@ namespace Google.Protobuf.Protocol {
     static StructReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgxTdHJ1Y3QucHJvdG8SCFByb3RvY29sGgpFbnVtLnByb3RvIigKCFJvb21J",
-            "bmZvEg4KBnJvb21JZBgBIAEoBRIMCgRuYW1lGAIgASgJIlEKDFBvc2l0aW9u",
-            "SW5mbxIlCgVzdGF0ZRgBIAEoDjIWLlByb3RvY29sLkVPYmplY3RTdGF0ZRIM",
-            "CgRwb3NYGAIgASgFEgwKBHBvc1kYAyABKAUiRwoKT2JqZWN0SW5mbxIQCghv",
-            "YmplY3RJZBgBIAEoBRInCgdwb3NJbmZvGAIgASgLMhYuUHJvdG9jb2wuUG9z",
-            "aXRpb25JbmZvIjkKDVRldHJvbWlub0luZm8SKAoKb2JqZWN0SW5mbxgBIAEo",
-            "CzIULlByb3RvY29sLk9iamVjdEluZm8iLAoKUGxheWVySW5mbxIQCghwbGF5",
-            "ZXJJZBgBIAEoBRIMCgRuYW1lGAIgASgJQhuqAhhHb29nbGUuUHJvdG9idWYu",
-            "UHJvdG9jb2xiBnByb3RvMw=="));
+            "CgxTdHJ1Y3QucHJvdG8SCFByb3RvY29sGgpFbnVtLnByb3RvImMKCFJvb21J",
+            "bmZvEg4KBnJvb21JZBgBIAEoBRIMCgRuYW1lGAIgASgJEiQKBnN0YXR1cxgD",
+            "IAEoDjIULlByb3RvY29sLkVSb29tU3RhdGUSEwoLcGxheWVyQ291bnQYBCAB",
+            "KAUiUQoMUG9zaXRpb25JbmZvEiUKBXN0YXRlGAEgASgOMhYuUHJvdG9jb2wu",
+            "RU9iamVjdFN0YXRlEgwKBHBvc1gYAiABKAUSDAoEcG9zWRgDIAEoBSJHCgpP",
+            "YmplY3RJbmZvEhAKCG9iamVjdElkGAEgASgFEicKB3Bvc0luZm8YAiABKAsy",
+            "Fi5Qcm90b2NvbC5Qb3NpdGlvbkluZm8iOQoNVGV0cm9taW5vSW5mbxIoCgpv",
+            "YmplY3RJbmZvGAEgASgLMhQuUHJvdG9jb2wuT2JqZWN0SW5mbyIsCgpQbGF5",
+            "ZXJJbmZvEhAKCHBsYXllcklkGAEgASgFEgwKBG5hbWUYAiABKAlCG6oCGEdv",
+            "b2dsZS5Qcm90b2J1Zi5Qcm90b2NvbGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.Protocol.EnumReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.RoomInfo), global::Google.Protobuf.Protocol.RoomInfo.Parser, new[]{ "RoomId", "Name" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.RoomInfo), global::Google.Protobuf.Protocol.RoomInfo.Parser, new[]{ "RoomId", "Name", "Status", "PlayerCount" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.PositionInfo), global::Google.Protobuf.Protocol.PositionInfo.Parser, new[]{ "State", "PosX", "PosY" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.ObjectInfo), global::Google.Protobuf.Protocol.ObjectInfo.Parser, new[]{ "ObjectId", "PosInfo" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.TetrominoInfo), global::Google.Protobuf.Protocol.TetrominoInfo.Parser, new[]{ "ObjectInfo" }, null, null, null, null),
@@ -74,6 +75,8 @@ namespace Google.Protobuf.Protocol {
     public RoomInfo(RoomInfo other) : this() {
       roomId_ = other.roomId_;
       name_ = other.name_;
+      status_ = other.status_;
+      playerCount_ = other.playerCount_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -104,6 +107,28 @@ namespace Google.Protobuf.Protocol {
       }
     }
 
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 3;
+    private global::Google.Protobuf.Protocol.ERoomState status_ = global::Google.Protobuf.Protocol.ERoomState.Waiting;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Google.Protobuf.Protocol.ERoomState Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "playerCount" field.</summary>
+    public const int PlayerCountFieldNumber = 4;
+    private int playerCount_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int PlayerCount {
+      get { return playerCount_; }
+      set {
+        playerCount_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as RoomInfo);
@@ -119,6 +144,8 @@ namespace Google.Protobuf.Protocol {
       }
       if (RoomId != other.RoomId) return false;
       if (Name != other.Name) return false;
+      if (Status != other.Status) return false;
+      if (PlayerCount != other.PlayerCount) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -127,6 +154,8 @@ namespace Google.Protobuf.Protocol {
       int hash = 1;
       if (RoomId != 0) hash ^= RoomId.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
+      if (Status != global::Google.Protobuf.Protocol.ERoomState.Waiting) hash ^= Status.GetHashCode();
+      if (PlayerCount != 0) hash ^= PlayerCount.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -148,6 +177,14 @@ namespace Google.Protobuf.Protocol {
         output.WriteRawTag(18);
         output.WriteString(Name);
       }
+      if (Status != global::Google.Protobuf.Protocol.ERoomState.Waiting) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) Status);
+      }
+      if (PlayerCount != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(PlayerCount);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -161,6 +198,12 @@ namespace Google.Protobuf.Protocol {
       }
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
+      }
+      if (Status != global::Google.Protobuf.Protocol.ERoomState.Waiting) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
+      }
+      if (PlayerCount != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PlayerCount);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -179,6 +222,12 @@ namespace Google.Protobuf.Protocol {
       if (other.Name.Length != 0) {
         Name = other.Name;
       }
+      if (other.Status != global::Google.Protobuf.Protocol.ERoomState.Waiting) {
+        Status = other.Status;
+      }
+      if (other.PlayerCount != 0) {
+        PlayerCount = other.PlayerCount;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -196,6 +245,14 @@ namespace Google.Protobuf.Protocol {
           }
           case 18: {
             Name = input.ReadString();
+            break;
+          }
+          case 24: {
+            Status = (global::Google.Protobuf.Protocol.ERoomState) input.ReadEnum();
+            break;
+          }
+          case 32: {
+            PlayerCount = input.ReadInt32();
             break;
           }
         }

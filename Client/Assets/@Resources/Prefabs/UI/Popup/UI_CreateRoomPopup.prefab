@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 2717046996807454322}
   - component: {fileID: 2717046996807454323}
   - component: {fileID: 2717046996807454332}
-  - component: {fileID: 5426265221880121313}
+  - component: {fileID: 2437857496170023825}
   m_Layer: 5
   m_Name: UI_CreateRoomPopup
   m_TagString: Untagged
@@ -327,7 +327,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &5426265221880121313
+--- !u!114 &2437857496170023825
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -336,7 +336,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2717046996807454333}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 501f52860e3c1eb4ab19184194504bee, type: 3}
+  m_Script: {fileID: 11500000, guid: 302aec0cb6480804fb725bae463e3597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UICanvas: {fileID: 2717046996807454322}

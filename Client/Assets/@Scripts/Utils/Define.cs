@@ -11,7 +11,8 @@ public class Define
         TitleScene,
         GameScene,
         SingleGameScene,
-        MultiGameScene
+        MultiGameScene,
+        LobbyScene
     }
     public enum ETouchEvent
     {

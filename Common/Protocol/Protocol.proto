@@ -30,5 +30,52 @@ message C_LogInReq
 
 message S_LogInRes
 {
-	bool success = 1;
+	ELogInResult result = 1;
+	PlayerInfo playerInfo = 2;
+}
+
+message C_DeleteRoomReq
+{
+	int32 roomIndex = 1;
+}
+
+message S_DeleteRoomRes
+{
+	int32 roomIndex = 1;
+	EDeleteRoomResult result = 2;
+}
+
+message C_CreateRoomReq
+{
+	string name = 1;
+}
+
+message S_CreateRoomRes
+{
+	ECreateRoomResult result = 2;
+}
+
+message C_RoomListReq
+{
+
+}
+
+message S_RoomListRes
+{
+	repeated RoomInfo rooms = 1;
+}
+
+message C_EnterGame 
+{
+	int32 roomIndex = 1;
+}
+
+message S_EnterGame 
+{
+	repeated PlayerInfo playerInfos = 1;
+}
+
+message S_JoinGame
+{
+	PlayerInfo playerInfo = 1;
 }
