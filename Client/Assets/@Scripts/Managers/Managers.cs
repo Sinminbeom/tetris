@@ -10,12 +10,12 @@ public class Managers : MonoBehaviour
     #region Contents
 
     private GameRoomManager _room = new GameRoomManager();
+    private ObjectManager _object = new ObjectManager();
+    private PlayerManager _player = new PlayerManager();
 
     public static GameRoomManager GameRoom { get { return Instance?._room; } }
-
-    private ObjectManager _object = new ObjectManager();
-
     public static ObjectManager Object { get { return Instance?._object; } }
+    public static PlayerManager Player { get { return Instance?._player; } }
 
     #endregion
 

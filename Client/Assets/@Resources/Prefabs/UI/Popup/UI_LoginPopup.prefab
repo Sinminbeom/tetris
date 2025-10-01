@@ -478,7 +478,7 @@ GameObject:
   - component: {fileID: 2717046996807454332}
   - component: {fileID: 8368765059802204490}
   m_Layer: 5
-  m_Name: UI_LoginPopup
+  m_Name: UI_LogInPopup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -117,7 +117,7 @@ public class UI_TitleScene : UI_Scene
         ConnectToGameServer();
 
         // 로딩 완료되면 로그인
-        UI_LoginPopup popup = Managers.UI.ShowPopupUI<UI_LoginPopup>();
+        UI_LogInPopup popup = Managers.UI.ShowPopupUI<UI_LogInPopup>();
         popup.SetInfo(OnLoginSuccess);
     }
 
@@ -129,7 +129,10 @@ public class UI_TitleScene : UI_Scene
     private void OnLoginSuccess(bool isSuccess)
     {
         if (isSuccess)
+        {
             State = ETitleSceneState.LoginSuccess;
+            GetText(((int)Texts.StartText)).gameObject.SetActive(true);
+        }
         else
             State = ETitleSceneState.LoginFail;
     }
@@ -163,16 +166,5 @@ public class UI_TitleScene : UI_Scene
     //    // 게임서버가 인증 통과 해주면 캐릭터 목록 요청.
     //    UI_SelectCharacterPopup popup = Managers.UI.ShowPopupUI<UI_SelectCharacterPopup>();
     //    popup.SendHeroListReqPacket();
-    //}
-
-    //public void OnHeroListResHandler(S_HeroListRes resPacket)
-    //{
-    //    List<MyHeroInfo> heroes = resPacket.Heroes.ToList();
-
-    //    UI_SelectCharacterPopup popup = Managers.UI.GetLastPopupUI<UI_SelectCharacterPopup>();
-    //    if (popup == null)
-    //        popup = Managers.UI.ShowPopupUI<UI_SelectCharacterPopup>();
-
-    //    popup.SetInfo(heroes);
     //}
 }

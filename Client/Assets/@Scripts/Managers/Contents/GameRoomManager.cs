@@ -10,7 +10,7 @@ public class GameRoomManager
         MyPlayer,
         EnemyPlayer
     };
-    public string RoomId { get; private set; }
+    public int RoomId { get; set; }
     private IPlayer MyPlayer { get; set; }
     private IPlayer EnemyPlayer { get; set; }
 

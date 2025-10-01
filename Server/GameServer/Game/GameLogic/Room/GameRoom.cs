@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using Server;
+using ServerCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,31 @@ namespace GameServer
 {
 	public partial class GameRoom : JobSerializer
 	{
-		public int GameRoomId { get; set; }
-		public int TemplateId { get; set; }
+		public int RoomId { get; set; }
+		public ERoomState State { get; set; }
+		public string Name { get; set; }
+		public Player hostPlayer { get; set; }
 
-		Dictionary<int, Player> _players = new Dictionary<int, Player>();
+		public int PlayerCount { 
+			get { return _players.Count; }
+		}
 
-		public void Init(int mapTemplateId, int zoneCells)
+		List<Player> _players = new List<Player>();
+
+		public Player GetOtherPlayer(Player player)
 		{
-			TemplateId = mapTemplateId;
+
+            foreach (Player p in _players)
+            {
+				if (p.PlayerId != player.PlayerId)
+					return p;
+            }
+
+			return null;
+		}
+
+		public void Init()
+		{
 		}
 
 		// 누군가 주기적으로 호출해줘야 한다
@@ -28,6 +46,21 @@ namespace GameServer
 			//Console.WriteLine($"TimerCount : {TimerCount}");
 			//Console.WriteLine($"JobCount : {JobCount}");
 			Flush();
+		}
+
+		public void EnterGame(Player player)
+		{
+			_players.Add(player);
+
+			foreach (Player _player in _players)
+			{
+				if (_player.PlayerId != player.PlayerId)
+				{
+					S_JoinGame joinGame = new S_JoinGame();
+					joinGame.PlayerInfo = player.PlayerInfo;
+					_player.Session.Send(joinGame);
+				}
+			}
 		}
 
 		/*
