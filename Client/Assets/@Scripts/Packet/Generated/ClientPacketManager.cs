@@ -29,6 +29,8 @@ public enum MsgId
 	S_MoveTetromino = 21,
 	C_LockBlock = 22,
 	S_LockBlock = 23,
+	C_ClearRows = 24,
+	S_ClearRows = 25,
 }
 
 class PacketManager
@@ -75,7 +77,9 @@ class PacketManager
 		_onRecv.Add((ushort)MsgId.S_MoveTetromino, MakePacket<S_MoveTetromino>);
 		_handler.Add((ushort)MsgId.S_MoveTetromino, PacketHandler.S_MoveTetrominoHandler);		
 		_onRecv.Add((ushort)MsgId.S_LockBlock, MakePacket<S_LockBlock>);
-		_handler.Add((ushort)MsgId.S_LockBlock, PacketHandler.S_LockBlockHandler);
+		_handler.Add((ushort)MsgId.S_LockBlock, PacketHandler.S_LockBlockHandler);		
+		_onRecv.Add((ushort)MsgId.S_ClearRows, MakePacket<S_ClearRows>);
+		_handler.Add((ushort)MsgId.S_ClearRows, PacketHandler.S_ClearRowsHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

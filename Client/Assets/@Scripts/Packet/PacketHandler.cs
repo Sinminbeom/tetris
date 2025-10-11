@@ -114,5 +114,12 @@ class PacketHandler
 
         Managers.GameRoom.EnemyPlayer.Board.SyncAddObject();
     }
+
+    public static void S_ClearRowsHandler(PacketSession session, IMessage packet)
+    {
+        S_ClearRows clearRows = (S_ClearRows)packet;
+
+        Managers.GameRoom.EnemyPlayer.Board.ClearRows(clearRows.Rows.ToList());
+    }
 }
 

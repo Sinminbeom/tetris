@@ -124,5 +124,14 @@ message C_LockBlock
 
 message S_LockBlock
 {
-	repeated Block blocks = 1;
+}
+
+message C_ClearRows
+{
+    repeated int32 rows = 1;
+}
+
+message S_ClearRows
+{
+    repeated int32 rows = 1;
 }

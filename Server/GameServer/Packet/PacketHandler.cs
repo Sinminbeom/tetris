@@ -99,4 +99,11 @@ class PacketHandler
         ClientSession clientSession = (ClientSession)session;
         clientSession.HandleLockBlock(lockBlock);
     }
+
+    public static void C_ClearRowsHandler(PacketSession session, IMessage packet)
+    {
+        C_ClearRows clearRows = (C_ClearRows)packet;
+        ClientSession clientSession = (ClientSession)session;
+        clientSession.HandleClearRows(clearRows);
+    }
 }
