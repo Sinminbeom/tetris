@@ -65,8 +65,8 @@ public class MultiplayersBuildAndRun
 			BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows);
 
 		// 해상도 설정
-		PlayerSettings.defaultScreenWidth = 800;
-		PlayerSettings.defaultScreenHeight = 800;
+		PlayerSettings.defaultScreenWidth = 2560;
+		PlayerSettings.defaultScreenHeight = 1600;
 		PlayerSettings.fullScreenMode = FullScreenMode.Windowed;
 		
 		for (int i = 1; i <= playerCount; i++)

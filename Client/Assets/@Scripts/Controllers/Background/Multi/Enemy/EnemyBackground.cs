@@ -22,7 +22,7 @@ public class EnemyBackground : MultiBackground
 
         // 타일 보드
         color.a = 0.5f;
-        for (int x = halfWidth; x < minWidth; ++x)
+        for (int x = enemyBoardPos.x - halfWidth; x < minWidth; ++x)
         {
             for (int y = halfHeight; y > -halfHeight; --y)
             {

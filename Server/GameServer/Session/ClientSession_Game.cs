@@ -35,7 +35,7 @@ namespace Server
             Send(signUpRes);
         }
 
-        public void HandleLonInReq(C_LogInReq logInReq)
+        public void HandleLogInReq(C_LogInReq logInReq)
         {
             S_LogInRes logInRes = new S_LogInRes();
             logInRes.Result = ELogInResult.Success;
@@ -65,12 +65,7 @@ namespace Server
 
             foreach (GameRoom room in rooms)
             {
-                RoomInfo roomInfo = new RoomInfo();
-                roomInfo.Name = room.Name;
-                roomInfo.RoomId = room.RoomId;
-                roomInfo.Status = room.State;
-                roomInfo.PlayerCount = room.PlayerCount;
-                roomListRes.Rooms.Add(roomInfo);
+                roomListRes.Rooms.Add(room.RoomInfo);
             }
 
             Send(roomListRes);
@@ -82,11 +77,12 @@ namespace Server
             GameLogic.Instance.Push(() => {
                 S_CreateRoomRes createRoomRes = new S_CreateRoomRes();
 
-                GameRoom room = GameLogic.Instance.GameRooms.FirstOrDefault(r => r.Name == createRoomReq.Name);
+                GameRoom room = GameLogic.Instance.GameRooms.FirstOrDefault(r => r.RoomInfo.Name == createRoomReq.Name);
 
                 if (room == null)
                 {
-                    GameLogic.Instance.Add(Player, createRoomReq.Name);
+                    RoomInfo roomInfo = GameLogic.Instance.Add(Player, createRoomReq.Name);
+                    createRoomRes.RoomInfo = roomInfo;
                     createRoomRes.Result = ECreateRoomResult.Success;
                 }
                 else
@@ -95,35 +91,7 @@ namespace Server
                 }
 
                 Send(createRoomRes);
-
-                //GameRoom room = GameLogic.Instance.GetRooms().FirstOrDefault(r => r.Name == createRoomReq.Name);
-
-                //if (room == null)
-                //{
-                //    int roomId = GameLogic.Instance.Add(Player, createRoomReq.Name);
-                //    createRoomRes.RoomId = roomId;
-                //    createRoomRes.Result = ECreateRoomResult.Success;
-                //}
-                //else
-                //{
-                //    createRoomRes.Result = ECreateRoomResult.FailDuplicateName;
-                //}
-
-                //Send(createRoomRes);
             });
-
-            //if (room == null)
-            //{
-            //    int roomId = GameLogic.Instance.Add();
-            //    createRoomRes.RoomId = roomId;
-            //    createRoomRes.Result = ECreateRoomResult.Success;
-            //}
-            //else
-            //{
-            //    createRoomRes.Result = ECreateRoomResult.FailDuplicateName;
-            //}
-
-            //Send(createRoomRes);
         }
 
         public void HandleDeleteRoomReq(C_DeleteRoomReq deleteRoomReq)
@@ -140,7 +108,7 @@ namespace Server
 
         public void HandleEnterGame(C_EnterGame enterGamePacket)
         {
-            GameRoom gameRoom = GameLogic.Instance.Find(enterGamePacket.RoomIndex);
+            GameRoom gameRoom = GameLogic.Instance.FindByIndex(enterGamePacket.RoomIndex);
             gameRoom.EnterGame(Player);
 
             Player otherPlayer = gameRoom.GetOtherPlayer(Player);
@@ -149,26 +117,83 @@ namespace Server
 
             if (otherPlayer != null)
             {
+                enterGame.RoomInfo = gameRoom.RoomInfo;
                 enterGame.PlayerInfos.Add(otherPlayer.PlayerInfo);
             }
-            //enterGame.RoomIndex = gameRoom.RoomId;
             Send(enterGame);
+        }
+
+        public void HandlePlayerState(C_PlayerState playerStatePacket)
+        {
+            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+            foreach (Player player in gameRoom.Players)
+            {
+                if (player.PlayerInfo.PlayerId == playerStatePacket.PlayerInfo.PlayerId)
+                {
+                    player.PlayerInfo = playerStatePacket.PlayerInfo;
+                }
+                else
+                {
+                    S_PlayerState playerState = new S_PlayerState();
+                    playerState.PlayerInfo = playerStatePacket.PlayerInfo;
+                    player.Session.Send(playerState);
+                }
+            }
+
+            gameRoom.CheckAllReady();
+        }
+
+        public void HandleSpawnTetromino(C_SpawnTetromino spawnTetrominoPacket)
+        {
+            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+
+            Player.Board.Tetromino.type = spawnTetrominoPacket.TetrominoType;
+
+            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            S_SpawnTetromino spawn = new S_SpawnTetromino();
+            spawn.TetrominoType = spawnTetrominoPacket.TetrominoType;
+
+            otherPlayer.Session.Send(spawn);
+        }
+
+        public void HandleMoveTetromino(C_MoveTetromino moveTetrominoPacket)
+        {
+            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+
+            Player.Board.Tetromino.positionInfo = moveTetrominoPacket.PositionInfo;
+
+            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            S_MoveTetromino moveTetromino = new S_MoveTetromino();
+            moveTetromino.PositionInfo = Player.Board.Tetromino.positionInfo;
+            otherPlayer.Session.Send(moveTetromino);
+        }
+
+        public void HandleLockBlock(C_LockBlock lockBlockPacket)
+        {
+            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            S_LockBlock lockBlock = new S_LockBlock();
+            otherPlayer.Session.Send(lockBlock);
         }
 
         Player MakePlayerFromPlayerDb(PlayerDb playerDb)
         {
             Player player = new Player();
             {
-                player.PlayerId = playerDb.PlayerDbId;
-                player.Name = playerDb.Name;
-                player.Email = playerDb.Email;
-                player.Session = this;
+                player.PlayerInfo.PlayerId = playerDb.PlayerDbId;
                 player.PlayerInfo.Name = playerDb.Name;
                 player.PlayerInfo.PlayerId = playerDb.PlayerDbId;
+                player.PlayerInfo.State = EPlayerState.NotReady;
+                player.PlayerInfo.Email = playerDb.Email;
+                player.Session = this;
             }
 
             return player;
         }
+
         //public void HandleEnterGame(C_EnterGame enterGamePacket)
         //{
         //	// TODO : 인증 토큰 

@@ -24,44 +24,38 @@ namespace Google.Protobuf.Protocol {
     static EnumReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CgpFbnVtLnByb3RvEghQcm90b2NvbCpuCgxFT2JqZWN0U3RhdGUSFgoSRU9C",
-            "SkVDVF9TVEFURV9OT05FEAASFgoSRU9CSkVDVF9TVEFURV9JRExFEAESFgoS",
-            "RU9CSkVDVF9TVEFURV9NT1ZFEAISFgoSRU9CSkVDVF9TVEFURV9ERUFEEAMq",
-            "7gEKD0VUZXRyb21pbm9TdGF0ZRIZChVFVEVUUk9NSU5PX1NUQVRFX05PTkUQ",
-            "ABIgChxFVEVUUk9NSU5PX1NUQVRFX0RPV05fTU9WSU5HEAESIAocRVRFVFJP",
-            "TUlOT19TVEFURV9MRUZUX01PVklORxACEiEKHUVURVRST01JTk9fU1RBVEVf",
-            "UklHSFRfTU9WSU5HEAMSHQoZRVRFVFJPTUlOT19TVEFURV9ST1RBVElORxAE",
-            "Eh0KGUVURVRST01JTk9fU1RBVEVfRFJPUFBJTkcQBRIbChdFVEVUUk9NSU5P",
-            "X1NUQVRFX0xPQ0tFRBAGKk4KD0VHYW1lT2JqZWN0VHlwZRIaChZFR0FNRV9P",
-            "QkpFQ1RfVFlQRV9OT05FEAASHwobRUdBTUVfT0JKRUNUX1RZUEVfVEVUUk9N",
-            "SU5PEAEqXAoKRVJvb21TdGF0ZRIXChNFUk9PTV9TVEFURV9XQUlUSU5HEAAS",
-            "GwoXRVJPT01fU1RBVEVfSU5fUFJPR1JFU1MQARIYChRFUk9PTV9TVEFURV9G",
-            "SU5JU0hFRBACKm8KDUVTaWduVXBSZXN1bHQSGAoURVNJR05fVVBfUkVTVUxU",
-            "X05PTkUQABIbChdFU0lHTl9VUF9SRVNVTFRfU1VDQ0VTUxABEicKI0VTSUdO",
-            "X1VQX1JFU1VMVF9GQUlMX0RVUExJQ0FURV9OQU1FEAIqbwoMRUxvZ0luUmVz",
-            "dWx0EhcKE0VMT0dfSU5fUkVTVUxUX05PTkUQABIaChZFTE9HX0lOX1JFU1VM",
-            "VF9TVUNDRVNTEAESKgomRUxPR19JTl9SRVNVTFRfRkFJTF9JTkNPUlJFQ1Rf",
-            "UEFTU1dPUkQQAipSChFFRGVsZXRlUm9vbVJlc3VsdBIcChhFREVMRVRFX1JP",
-            "T01fUkVTVUxUX05PTkUQABIfChtFREVMRVRFX1JPT01fUkVTVUxUX1NVQ0NF",
-            "U1MQASp/ChFFQ3JlYXRlUm9vbVJlc3VsdBIcChhFQ1JFQVRFX1JPT01fUkVT",
-            "VUxUX05PTkUQABIfChtFQ1JFQVRFX1JPT01fUkVTVUxUX1NVQ0NFU1MQARIr",
-            "CidFQ1JFQVRFX1JPT01fUkVTVUxUX0ZBSUxfRFVQTElDQVRFX05BTUUQAkIb",
-            "qgIYR29vZ2xlLlByb3RvYnVmLlByb3RvY29sYgZwcm90bzM="));
+            "CgpFbnVtLnByb3RvEghQcm90b2NvbCruAQoPRVRldHJvbWlub1N0YXRlEhkK",
+            "FUVURVRST01JTk9fU1RBVEVfTk9ORRAAEiAKHEVURVRST01JTk9fU1RBVEVf",
+            "RE9XTl9NT1ZJTkcQARIgChxFVEVUUk9NSU5PX1NUQVRFX0xFRlRfTU9WSU5H",
+            "EAISIQodRVRFVFJPTUlOT19TVEFURV9SSUdIVF9NT1ZJTkcQAxIdChlFVEVU",
+            "Uk9NSU5PX1NUQVRFX1JPVEFUSU5HEAQSHQoZRVRFVFJPTUlOT19TVEFURV9E",
+            "Uk9QUElORxAFEhsKF0VURVRST01JTk9fU1RBVEVfTE9DS0VEEAYqTgoPRUdh",
+            "bWVPYmplY3RUeXBlEhoKFkVHQU1FX09CSkVDVF9UWVBFX05PTkUQABIfChtF",
+            "R0FNRV9PQkpFQ1RfVFlQRV9URVRST01JTk8QASpcCgpFUm9vbVN0YXRlEhcK",
+            "E0VST09NX1NUQVRFX1dBSVRJTkcQABIbChdFUk9PTV9TVEFURV9JTl9QUk9H",
+            "UkVTUxABEhgKFEVST09NX1NUQVRFX0ZJTklTSEVEEAIqbwoNRVNpZ25VcFJl",
+            "c3VsdBIYChRFU0lHTl9VUF9SRVNVTFRfTk9ORRAAEhsKF0VTSUdOX1VQX1JF",
+            "U1VMVF9TVUNDRVNTEAESJwojRVNJR05fVVBfUkVTVUxUX0ZBSUxfRFVQTElD",
+            "QVRFX05BTUUQAipvCgxFTG9nSW5SZXN1bHQSFwoTRUxPR19JTl9SRVNVTFRf",
+            "Tk9ORRAAEhoKFkVMT0dfSU5fUkVTVUxUX1NVQ0NFU1MQARIqCiZFTE9HX0lO",
+            "X1JFU1VMVF9GQUlMX0lOQ09SUkVDVF9QQVNTV09SRBACKlIKEUVEZWxldGVS",
+            "b29tUmVzdWx0EhwKGEVERUxFVEVfUk9PTV9SRVNVTFRfTk9ORRAAEh8KG0VE",
+            "RUxFVEVfUk9PTV9SRVNVTFRfU1VDQ0VTUxABKn8KEUVDcmVhdGVSb29tUmVz",
+            "dWx0EhwKGEVDUkVBVEVfUk9PTV9SRVNVTFRfTk9ORRAAEh8KG0VDUkVBVEVf",
+            "Uk9PTV9SRVNVTFRfU1VDQ0VTUxABEisKJ0VDUkVBVEVfUk9PTV9SRVNVTFRf",
+            "RkFJTF9EVVBMSUNBVEVfTkFNRRACKl8KDEVQbGF5ZXJTdGF0ZRIXChNFUExB",
+            "WUVSX1NUQVRFX1JFQURZEAASGwoXRVBMQVlFUl9TVEFURV9OT1RfUkVBRFkQ",
+            "ARIZChVFUExBWUVSX1NUQVRFX1BMQVlJTkcQAipBCg5FVGV0cm9taW5vVHlw",
+            "ZRIFCgFJEAASBQoBTxABEgUKAVQQAhIFCgFTEAMSBQoBWhAEEgUKAUoQBRIF",
+            "CgFMEAZCG6oCGEdvb2dsZS5Qcm90b2J1Zi5Qcm90b2NvbGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Protocol.EObjectState), typeof(global::Google.Protobuf.Protocol.ETetrominoState), typeof(global::Google.Protobuf.Protocol.EGameObjectType), typeof(global::Google.Protobuf.Protocol.ERoomState), typeof(global::Google.Protobuf.Protocol.ESignUpResult), typeof(global::Google.Protobuf.Protocol.ELogInResult), typeof(global::Google.Protobuf.Protocol.EDeleteRoomResult), typeof(global::Google.Protobuf.Protocol.ECreateRoomResult), }, null, null));
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Protocol.ETetrominoState), typeof(global::Google.Protobuf.Protocol.EGameObjectType), typeof(global::Google.Protobuf.Protocol.ERoomState), typeof(global::Google.Protobuf.Protocol.ESignUpResult), typeof(global::Google.Protobuf.Protocol.ELogInResult), typeof(global::Google.Protobuf.Protocol.EDeleteRoomResult), typeof(global::Google.Protobuf.Protocol.ECreateRoomResult), typeof(global::Google.Protobuf.Protocol.EPlayerState), typeof(global::Google.Protobuf.Protocol.ETetrominoType), }, null, null));
     }
     #endregion
 
   }
   #region Enums
-  public enum EObjectState {
-    [pbr::OriginalName("EOBJECT_STATE_NONE")] None = 0,
-    [pbr::OriginalName("EOBJECT_STATE_IDLE")] Idle = 1,
-    [pbr::OriginalName("EOBJECT_STATE_MOVE")] Move = 2,
-    [pbr::OriginalName("EOBJECT_STATE_DEAD")] Dead = 3,
-  }
-
   public enum ETetrominoState {
     [pbr::OriginalName("ETETROMINO_STATE_NONE")] None = 0,
     [pbr::OriginalName("ETETROMINO_STATE_DOWN_MOVING")] DownMoving = 1,
@@ -104,6 +98,22 @@ namespace Google.Protobuf.Protocol {
     [pbr::OriginalName("ECREATE_ROOM_RESULT_NONE")] None = 0,
     [pbr::OriginalName("ECREATE_ROOM_RESULT_SUCCESS")] Success = 1,
     [pbr::OriginalName("ECREATE_ROOM_RESULT_FAIL_DUPLICATE_NAME")] FailDuplicateName = 2,
+  }
+
+  public enum EPlayerState {
+    [pbr::OriginalName("EPLAYER_STATE_READY")] Ready = 0,
+    [pbr::OriginalName("EPLAYER_STATE_NOT_READY")] NotReady = 1,
+    [pbr::OriginalName("EPLAYER_STATE_PLAYING")] Playing = 2,
+  }
+
+  public enum ETetrominoType {
+    [pbr::OriginalName("I")] I = 0,
+    [pbr::OriginalName("O")] O = 1,
+    [pbr::OriginalName("T")] T = 2,
+    [pbr::OriginalName("S")] S = 3,
+    [pbr::OriginalName("Z")] Z = 4,
+    [pbr::OriginalName("J")] J = 5,
+    [pbr::OriginalName("L")] L = 6,
   }
 
   #endregion

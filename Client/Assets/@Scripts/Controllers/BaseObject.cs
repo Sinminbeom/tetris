@@ -6,7 +6,7 @@ using UnityEngine;
 public class BaseObject : MonoBehaviour
 {
     public int ObjectId { get; set; }
-     public virtual EGameObjectType ObjectType { get { return EGameObjectType.None; } }
+    public virtual EGameObjectType ObjectType { get { return EGameObjectType.None; } }
 
     protected virtual void Awake()
     {

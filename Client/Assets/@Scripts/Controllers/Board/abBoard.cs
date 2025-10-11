@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using Google.Protobuf.Protocol;
 using UnityEngine;
 
 public abstract class abBoard : IBoard
@@ -35,6 +35,11 @@ public abstract class abBoard : IBoard
     public void Spawn()
     {
         Tetromino.Spawn();
+    }
+
+    public void Spawn(ETetrominoType tetrominoType)
+    {
+        Tetromino.Spawn(tetrominoType);
     }
 
     // 이동 가능한지 체크
@@ -83,12 +88,46 @@ public abstract class abBoard : IBoard
             return false;
         }
 
+        C_MoveTetromino moveTetromino = new C_MoveTetromino() { PositionInfo = new PositionInfo() };
+        moveTetromino.PositionInfo.PosX = (int)Tetromino.transform.position.x;
+        moveTetromino.PositionInfo.PosY = (int)Tetromino.transform.position.y;
+        moveTetromino.PositionInfo.IsRotation = isRotate;
+        Managers.Network.Send(moveTetromino);
+
         return true;
     }
 
+    public void SyncMove(Vector3 pos, bool isRotate)
+    {
+        Tetromino.SyncMove(pos, isRotate);
+    }
+
     // 테트로미노를 보드에 추가
-    // 완료
     public void AddObject()
+    {
+        C_LockBlock lockBlock = new C_LockBlock();
+
+        Transform root = Tetromino.gameObject.transform;
+        while (root.childCount > 0)
+        {
+            Transform node = root.GetChild(0);
+
+            int x = Mathf.RoundToInt(node.transform.position.x + halfWidth - Pos.x);
+            int y = Mathf.RoundToInt(node.transform.position.y + halfHeight - 1);
+
+            lockBlock.Blocks.Add(new Block { X = (int)node.transform.position.x, Y = (int)node.transform.position.y });
+
+            Vector2Int pos = new Vector2Int(x, y);
+            _tiles[pos.x, pos.y] = node.GetComponent<Tile>();
+
+            node.parent = Root.transform;
+
+        }
+
+        Managers.Network.Send(lockBlock);
+    }
+
+    public void SyncAddObject()
     {
         Transform root = Tetromino.gameObject.transform;
         while (root.childCount > 0)

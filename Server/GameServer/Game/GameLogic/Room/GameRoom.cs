@@ -13,24 +13,22 @@ namespace GameServer
 {
 	public partial class GameRoom : JobSerializer
 	{
-		public int RoomId { get; set; }
-		public ERoomState State { get; set; }
-		public string Name { get; set; }
-		public Player hostPlayer { get; set; }
+		public RoomInfo RoomInfo { get; set; } = new RoomInfo();
 
-		public int PlayerCount { 
+		public int PlayerCount
+		{
 			get { return _players.Count; }
 		}
 
 		List<Player> _players = new List<Player>();
+		public List<Player> Players {  get { return _players; } }
 
 		public Player GetOtherPlayer(Player player)
 		{
-
-            foreach (Player p in _players)
+            foreach (Player _player in _players)
             {
-				if (p.PlayerId != player.PlayerId)
-					return p;
+				if (_player.PlayerInfo.PlayerId != player.PlayerInfo.PlayerId)
+					return _player;
             }
 
 			return null;
@@ -50,20 +48,47 @@ namespace GameServer
 
 		public void EnterGame(Player player)
 		{
+			player.Room = this;
 			_players.Add(player);
 
 			foreach (Player _player in _players)
 			{
-				if (_player.PlayerId != player.PlayerId)
+				if (_player.PlayerInfo.PlayerId != player.PlayerInfo.PlayerId)
 				{
 					S_JoinGame joinGame = new S_JoinGame();
 					joinGame.PlayerInfo = player.PlayerInfo;
 					_player.Session.Send(joinGame);
 				}
 			}
-		}
+        }
 
-		/*
+        public void CheckAllReady()
+        {
+            foreach (var player in _players)
+            {
+                Console.WriteLine($"PlayerID: {player.PlayerInfo.Name}, State: {player.PlayerInfo.State}");
+            }
+
+            if (_players.Count == 2 && _players.All(p => p.PlayerInfo.State == EPlayerState.Ready))
+            {
+                StartGame();
+            }
+        }
+
+		public void StartGame()
+		{
+			this.RoomInfo.Status = ERoomState.InProgress;
+
+            S_StartGame startGame = new S_StartGame();
+			startGame.RoomInfo = RoomInfo;
+
+            foreach (Player _player in _players)
+            {
+				_player.Session.Send(startGame);
+            }
+        }
+
+        /*
 		public void EnterGame(BaseObject obj, bool respawn = false, Vector2Int? pos = null)
 		{
 			if (obj == null)
@@ -149,7 +174,8 @@ namespace GameServer
 			}
 		}
 		*/
-		public void Broadcast(Vector2Int pos, IMessage packet)
+
+        public void Broadcast(Vector2Int pos, IMessage packet)
 		{;
 			byte[] packetBuffer = ClientSession.MakeSendBuffer(packet);
 

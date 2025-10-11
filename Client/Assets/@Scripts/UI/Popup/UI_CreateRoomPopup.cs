@@ -60,7 +60,8 @@ public class UI_CreateRoomPopup : UI_Popup
     public void OnCreateRoomResHandler(S_CreateRoomRes createRoomRes)
     {
         //OnRoomChanged?.Invoke();
-        //ClosePopupUI();
+
+        ClosePopupUI();
         if (createRoomRes.Result == ECreateRoomResult.Success)
         {
             UI_RoomPopup roomPopup = Managers.UI.ShowPopupUI<UI_RoomPopup>();

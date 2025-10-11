@@ -15,24 +15,20 @@ message RoomInfo
 
 message PositionInfo 
 {
-	EObjectState state = 1;
+	bool isRotation = 1;
 	int32 posX = 2;
 	int32 posY = 3;
-}
-
-message ObjectInfo 
-{
-	int32 objectId = 1;
-	PositionInfo posInfo = 2;  
-}
-
-message TetrominoInfo
-{
-	ObjectInfo objectInfo = 1;
 }
 
 message PlayerInfo
 {
 	int32 playerId = 1;
 	string name = 2;
+	string email = 3;
+	EPlayerState state = 4;
+}
+
+message Block {
+    int32 x = 1;
+    int32 y = 2;
 }

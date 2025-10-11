@@ -12,7 +12,7 @@ public class EnemyBoardFactory : IMultiBoardFactory
         background.Board = board;
         board.Background = background;
 
-        GameObject go = new GameObject("@Tetromino");
+        GameObject go = new GameObject("@EnemyTetromino");
         EnemyTetromino tetromino = Utils.GetOrAddComponent<EnemyTetromino>(go);
         board.Tetromino = tetromino;
         tetromino.Board = board;

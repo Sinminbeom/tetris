@@ -1,66 +1,93 @@
-﻿using UnityEngine;
+﻿using Google.Protobuf.Protocol;
+using UnityEngine;
 
-public class Tetromino : BaseObject
+public class Tetromino : MonoBehaviour
 {
     public IBoard Board { get; set; }
-    protected override void Awake()
+
+    protected virtual void Awake()
     {
 
     }
 
-    protected override void Start()
+    protected virtual void Start()
     {
 
     }
 
-    protected override void Update()
+    protected virtual void Update()
     {
 
+    }
+
+    public void Move(Vector3 pos, bool isRotate)
+    {
+        transform.position += pos;
+
+        if (isRotate)
+        {
+            transform.rotation *= Quaternion.Euler(0, 0, 90);
+        }
+    }
+
+    public void SyncMove(Vector3 pos, bool isRotate)
+    {
+        transform.position = pos;
+
+        if (isRotate)
+        {
+            transform.rotation *= Quaternion.Euler(0, 0, 90);
+        }
     }
 
     public void Spawn()
     {
-        Transform tetrominoNode = this.transform;
+        // 클라이언트에서 랜덤 생성 (My)
+        ETetrominoType randomType = (ETetrominoType)Random.Range(0, 7);
+        Spawn(randomType);
 
+        // 서버 전송
+        C_SpawnTetromino spawnTetromino = new C_SpawnTetromino();
+        spawnTetromino.TetrominoType = randomType;
+        Managers.Network.Send(spawnTetromino);
+    }
+
+    public void Spawn(ETetrominoType type)
+    {
+        // 서버로 부터 받아서 
+        Transform tetrominoNode = this.transform;
         tetrominoNode.transform.rotation = Quaternion.identity;
         tetrominoNode.transform.position = Board.Pos + new Vector2(0, Board.halfHeight);
 
-        int index = Random.Range(0, 7);
         Color32 color = Color.white;
 
-        // index = 0;
-
-        switch (index)
+        switch (type)
         {
-            // I : 하늘색
-            case 0:
+            case ETetrominoType.I:
                 color = new Color32(115, 251, 253, 255);
-                GameObject go1 = Tile.CreateTile(tetrominoNode, new Vector2(-2f, 0.0f), color, pooling: true);
-                Tile.CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color, pooling: true);
-                Tile.CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color, pooling: true);
-                Tile.CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(-2f, 0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(-1f, 0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(0f, 0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(1f, 0f), color, pooling: true);
                 break;
 
-            // J : 파란색
-            case 1:
+            case ETetrominoType.J:
                 color = new Color32(0, 33, 245, 255);
-                Tile.CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color, pooling: true);
-                Tile.CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color, pooling: true);
-                Tile.CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color, pooling: true);
-                Tile.CreateTile(tetrominoNode, new Vector2(-1f, 1.0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(-1f, 0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(0f, 0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(1f, 0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(-1f, 1f), color, pooling: true);
                 break;
 
-            // L : 귤색
-            case 2:
+            case ETetrominoType.L:
                 color = new Color32(243, 168, 59, 255);
-                Tile.CreateTile(tetrominoNode, new Vector2(-1f, 0.0f), color, pooling: true);
-                Tile.CreateTile(tetrominoNode, new Vector2(0f, 0.0f), color, pooling: true);
-                Tile.CreateTile(tetrominoNode, new Vector2(1f, 0.0f), color, pooling: true);
-                Tile.CreateTile(tetrominoNode, new Vector2(1f, 1.0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(-1f, 0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(0f, 0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(1f, 0f), color, pooling: true);
+                Tile.CreateTile(tetrominoNode, new Vector2(1f, 1f), color, pooling: true);
                 break;
 
-            // O : 노란색
-            case 3:
+            case ETetrominoType.O:
                 color = new Color32(255, 253, 84, 255);
                 Tile.CreateTile(tetrominoNode, new Vector2(0f, 0f), color, pooling: true);
                 Tile.CreateTile(tetrominoNode, new Vector2(1f, 0f), color, pooling: true);
@@ -68,8 +95,7 @@ public class Tetromino : BaseObject
                 Tile.CreateTile(tetrominoNode, new Vector2(1f, 1f), color, pooling: true);
                 break;
 
-            // S : 녹색
-            case 4:
+            case ETetrominoType.S:
                 color = new Color32(117, 250, 76, 255);
                 Tile.CreateTile(tetrominoNode, new Vector2(-1f, -1f), color, pooling: true);
                 Tile.CreateTile(tetrominoNode, new Vector2(0f, -1f), color, pooling: true);
@@ -77,8 +103,7 @@ public class Tetromino : BaseObject
                 Tile.CreateTile(tetrominoNode, new Vector2(1f, 0f), color, pooling: true);
                 break;
 
-            // T : 자주색
-            case 5:
+            case ETetrominoType.T:
                 color = new Color32(155, 47, 246, 255);
                 Tile.CreateTile(tetrominoNode, new Vector2(-1f, 0f), color, pooling: true);
                 Tile.CreateTile(tetrominoNode, new Vector2(0f, 0f), color, pooling: true);
@@ -86,8 +111,7 @@ public class Tetromino : BaseObject
                 Tile.CreateTile(tetrominoNode, new Vector2(0f, 1f), color, pooling: true);
                 break;
 
-            // Z : 빨간색
-            case 6:
+            case ETetrominoType.Z:
                 color = new Color32(235, 51, 35, 255);
                 Tile.CreateTile(tetrominoNode, new Vector2(-1f, 1f), color, pooling: true);
                 Tile.CreateTile(tetrominoNode, new Vector2(0f, 1f), color, pooling: true);
@@ -95,7 +119,5 @@ public class Tetromino : BaseObject
                 Tile.CreateTile(tetrominoNode, new Vector2(1f, 0f), color, pooling: true);
                 break;
         }
-
-        //return Tetromino;
     }
 }

@@ -20,6 +20,15 @@ public enum MsgId
 	C_EnterGame = 12,
 	S_EnterGame = 13,
 	S_JoinGame = 14,
+	C_PlayerState = 15,
+	S_PlayerState = 16,
+	S_StartGame = 17,
+	C_SpawnTetromino = 18,
+	S_SpawnTetromino = 19,
+	C_MoveTetromino = 20,
+	S_MoveTetromino = 21,
+	C_LockBlock = 22,
+	S_LockBlock = 23,
 }
 
 class PacketManager
@@ -56,7 +65,17 @@ class PacketManager
 		_onRecv.Add((ushort)MsgId.S_EnterGame, MakePacket<S_EnterGame>);
 		_handler.Add((ushort)MsgId.S_EnterGame, PacketHandler.S_EnterGameHandler);		
 		_onRecv.Add((ushort)MsgId.S_JoinGame, MakePacket<S_JoinGame>);
-		_handler.Add((ushort)MsgId.S_JoinGame, PacketHandler.S_JoinGameHandler);
+		_handler.Add((ushort)MsgId.S_JoinGame, PacketHandler.S_JoinGameHandler);		
+		_onRecv.Add((ushort)MsgId.S_PlayerState, MakePacket<S_PlayerState>);
+		_handler.Add((ushort)MsgId.S_PlayerState, PacketHandler.S_PlayerStateHandler);		
+		_onRecv.Add((ushort)MsgId.S_StartGame, MakePacket<S_StartGame>);
+		_handler.Add((ushort)MsgId.S_StartGame, PacketHandler.S_StartGameHandler);		
+		_onRecv.Add((ushort)MsgId.S_SpawnTetromino, MakePacket<S_SpawnTetromino>);
+		_handler.Add((ushort)MsgId.S_SpawnTetromino, PacketHandler.S_SpawnTetrominoHandler);		
+		_onRecv.Add((ushort)MsgId.S_MoveTetromino, MakePacket<S_MoveTetromino>);
+		_handler.Add((ushort)MsgId.S_MoveTetromino, PacketHandler.S_MoveTetrominoHandler);		
+		_onRecv.Add((ushort)MsgId.S_LockBlock, MakePacket<S_LockBlock>);
+		_handler.Add((ushort)MsgId.S_LockBlock, PacketHandler.S_LockBlockHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)
