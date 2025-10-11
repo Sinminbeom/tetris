@@ -179,6 +179,16 @@ namespace Server
             otherPlayer.Session.Send(lockBlock);
         }
 
+        public void HandleClearRows(C_ClearRows clearRowsPacket)
+        {
+            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            S_ClearRows clearRows = new S_ClearRows();
+            clearRows.Rows.AddRange(clearRowsPacket.Rows);
+            otherPlayer.Session.Send(clearRows);
+        }
+
         Player MakePlayerFromPlayerDb(PlayerDb playerDb)
         {
             Player player = new Player();

@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.Protocol;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class abBoard : IBoard
@@ -146,6 +147,81 @@ public abstract class abBoard : IBoard
 
     public void CheckCompleteRow()
     {
+        List<int> fullRows = GetFullRows();
+
+        if (fullRows.Count > 0)
+        {
+            C_ClearRows clearRows = new C_ClearRows();
+            clearRows.Rows.AddRange(fullRows);
+            Managers.Network.Send(clearRows);
+
+            ClearRows(fullRows);
+        }
+    }
+
+    public List<int> GetFullRows()
+    {
+        List<int> fullRows = new List<int>();
+
+        for (int y = 0; y < boardHeight; y++)
+        {
+            bool full = true;
+
+            for (int x = 0; x < boardWidth; x++)
+            {
+                if (_tiles[x, y] == null)
+                {
+                    full = false;
+                    break;
+                }
+            }
+
+            if (full)
+                fullRows.Add(y);
+        }
+
+        return fullRows;
+    }
+
+    public void ClearRows(List<int> rows)
+    {
+        if (rows == null || rows.Count == 0)
+            return;
+
+        rows.Sort();
+        rows.Reverse(); // 높은 행부터 제거
+
+        foreach (int y in rows)
+        {
+            for (int x = 0; x < boardWidth; x++)
+            {
+                if (_tiles[x, y] != null)
+                {
+                    Managers.Resource.Destroy(_tiles[x, y].gameObject);
+                    _tiles[x, y] = null;
+                }
+            }
+
+            // 위 행들 아래로 내림
+            for (int yy = y + 1; yy < boardHeight; yy++)
+            {
+                for (int x = 0; x < boardWidth; x++)
+                {
+                    if (_tiles[x, yy] != null)
+                    {
+                        _tiles[x, yy - 1] = _tiles[x, yy];
+                        _tiles[x, yy] = null;
+                        _tiles[x, yy - 1].transform.position += new Vector3(0, -1, 0);
+                    }
+                }
+            }
+        }
+    }
+
+
+    /*
+    public void CheckCompleteRow()
+    {
         for (int y = 0; y < boardHeight; y++)
         {
             bool fullRow = true;
@@ -190,4 +266,5 @@ public abstract class abBoard : IBoard
             }
         }
     }
+    */
 }

@@ -26,5 +26,6 @@ public interface IBoard
     bool CanMove();
     void AddObject();
     void SyncAddObject();
+    void ClearRows(List<int> rows);
     void CheckCompleteRow();
 }
