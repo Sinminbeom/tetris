@@ -48,7 +48,7 @@ class PacketHandler
 	{
         C_LogInReq logInReq = (C_LogInReq)packet;
         ClientSession clientSession = (ClientSession)session;
-        clientSession.HandleLonInReq(logInReq);
+        clientSession.HandleLogInReq(logInReq);
     }
 
 	public static void C_DeleteRoomReqHandler(PacketSession session, IMessage packet)
@@ -70,5 +70,33 @@ class PacketHandler
         C_RoomListReq roomListReq = (C_RoomListReq)packet;
         ClientSession clientSession = (ClientSession)session;
 		clientSession.HandleRoomListReq(roomListReq);
+    }
+
+    public static void C_PlayerStateHandler(PacketSession session, IMessage packet)
+	{
+		C_PlayerState playerState = (C_PlayerState)packet;
+        ClientSession clientSession = (ClientSession)session;
+        clientSession.HandlePlayerState(playerState);
+    }
+
+	public static void C_SpawnTetrominoHandler(PacketSession session, IMessage packet)
+	{
+        C_SpawnTetromino spawnTetromino = (C_SpawnTetromino)packet;
+        ClientSession clientSession = (ClientSession)session;
+        clientSession.HandleSpawnTetromino(spawnTetromino);
+    }
+
+	public static void C_MoveTetrominoHandler(PacketSession session, IMessage packet)
+	{
+        C_MoveTetromino moveTetromino = (C_MoveTetromino)packet;
+        ClientSession clientSession = (ClientSession)session;
+        clientSession.HandleMoveTetromino(moveTetromino);
+    }
+
+    public static void C_LockBlockHandler(PacketSession session, IMessage packet)
+    {
+        C_LockBlock lockBlock = (C_LockBlock)packet;
+        ClientSession clientSession = (ClientSession)session;
+        clientSession.HandleLockBlock(lockBlock);
     }
 }

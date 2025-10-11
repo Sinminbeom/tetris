@@ -10,43 +10,37 @@ public class GameRoomManager
         MyPlayer,
         EnemyPlayer
     };
-    public int RoomId { get; set; }
-    private IPlayer MyPlayer { get; set; }
-    private IPlayer EnemyPlayer { get; set; }
 
-    public void Init()
+    public RoomInfo RoomInfo { get; set; }
+    public IPlayer MyPlayer { get; set; }
+    public IPlayer EnemyPlayer { get; set; }
+
+    public PlayerInfo MyPlayerInfo { get; set; }
+    public PlayerInfo EnemyPlayerInfo { get; set; }
+
+    public void StartGame()
     {
-        // 이미 다른화면에서 SetPlayer로 플레이어들을 다 만들어놨을거임
-        {
-            PlayerInfo playerInfo = new PlayerInfo();
-            playerInfo.Name = "minbeom";
-            playerInfo.PlayerId = 1;
-            SetPlayer(playerInfo, PlayerType.MyPlayer);
-        }
-        {
-            PlayerInfo playerInfo1 = new PlayerInfo();
-            playerInfo1.Name = "subin";
-            playerInfo1.PlayerId = 2;
-            SetPlayer(playerInfo1, PlayerType.EnemyPlayer);
-        }
+        Load(MyPlayerInfo, PlayerType.MyPlayer);
+        Load(EnemyPlayerInfo, PlayerType.EnemyPlayer);
 
         MyPlayer.Init();
         EnemyPlayer.Init();
     }
-    public void SetPlayer(PlayerInfo player, PlayerType type)
+
+    public void Load(PlayerInfo playerInfo, PlayerType type)
     {
         switch (type)
         {
             case PlayerType.MyPlayer:
                 IPlayerFactory myPlayerFactory = new MyPlayerFactory(new MyPlayerInfoFactory());
-                IPlayer _myPlayer = myPlayerFactory.CreatePlayer();
+                IPlayer _myPlayer = myPlayerFactory.CreatePlayer(playerInfo);
                 MyPlayer = _myPlayer;
 
 
                 break;
             case PlayerType.EnemyPlayer:
                 IPlayerFactory enemyPlayerFactory = new EnemyPlayerFactory(new EnemyPlayerInfoFactory());
-                IPlayer _enemyPlayer = enemyPlayerFactory.CreatePlayer();
+                IPlayer _enemyPlayer = enemyPlayerFactory.CreatePlayer(playerInfo);
                 EnemyPlayer = _enemyPlayer;
                 break;
         }

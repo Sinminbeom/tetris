@@ -65,11 +65,7 @@ public class UI_LogInPopup : UI_Popup
             _onClosePopup?.Invoke(true);
             ClosePopupUI();
 
-            Debug.Log("=========================");
-            Debug.Log(logInRes.PlayerInfo);
-            Debug.Log(logInRes);
-            Debug.Log("=========================");
-            Managers.Player.Load(logInRes.PlayerInfo);
+            Managers.Player.MyPlayerInfo = logInRes.PlayerInfo;
 
             Managers.Scene.LoadScene(Define.EScene.LobbyScene);
         }

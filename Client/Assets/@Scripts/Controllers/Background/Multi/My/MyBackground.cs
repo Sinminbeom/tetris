@@ -21,7 +21,7 @@ public class MyBackground : MultiBackground
         int minWidth = myBoardPos.x - halfWidth;
 
         color.a = 0.5f;
-        for (int x = minWidth; x < -halfWidth; ++x)
+        for (int x = minWidth; x < myBoardPos.x + halfWidth; ++x)
         {
             for (int y = halfHeight; y > -halfHeight; --y)
             {

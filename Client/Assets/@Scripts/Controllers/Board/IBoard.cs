@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Protobuf.Protocol;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,8 +20,11 @@ public interface IBoard
 
     void Init();
     void Spawn();
+    void Spawn(ETetrominoType tetrominoType);
     bool MoveTo(Vector3 pos, bool isRotate);
+    void SyncMove(Vector3 pos, bool isRotate);
     bool CanMove();
     void AddObject();
+    void SyncAddObject();
     void CheckCompleteRow();
 }

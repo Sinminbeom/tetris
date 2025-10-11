@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Google.Protobuf.Protocol;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
-using static Azure.Core.HttpHeader;
 
 namespace GameServer
 {
@@ -13,51 +14,39 @@ namespace GameServer
 	{
 		public static GameLogic Instance { get; } = new GameLogic();
 
-		public List<GameRoom> GameRooms { get { return _rooms; } }
+		public List<GameRoom> GameRooms { get { return roomConatiner.ToList(); } }
 
-		List<GameRoom> _rooms = new List<GameRoom>();
-		int _roomId = 1;
+        public RoomConatiner roomConatiner = new RoomConatiner();
 
 		public void Update()
 		{
 			Flush();
 
-			foreach (GameRoom room in _rooms)
+			foreach (GameRoom room in GameRooms)
 			{
 				room.Update();
 			}
 		}
 
-		public void Add(Player player, string name)
+		public RoomInfo Add(Player player, string name)
 		{
-			GameRoom gameRoom = new GameRoom();
-			gameRoom.hostPlayer = player;
-			gameRoom.Name = name;
-			gameRoom.RoomId = _roomId;
-
-            gameRoom.Push(gameRoom.Init);
-
-            gameRoom.EnterGame(player);
-
-            _rooms.Add(gameRoom);
+            return roomConatiner.Add(player, name);
         }
 
-		public bool Remove(int roomIndex)
-		{
-			GameRoom gameRoom = _rooms[roomIndex];
-			return _rooms.Remove(gameRoom);
-		}
+        public bool Remove(int roomId)
+        {
+            return roomConatiner.Remove(roomId);
+        }
 
-		public GameRoom Find(int roomIndex)
-		{
-            if (roomIndex >= 0 && roomIndex < _rooms.Count)
-            {
-                return _rooms[roomIndex];
-            }
-            else
-            {
-				return null;
-            }
-		}
-	}
+        public GameRoom FindByIndex(int index)
+        {
+            return roomConatiner.FindByIndex(index);
+        }
+
+        public GameRoom FindByRoomId(int roomId)
+        {
+            return roomConatiner.FindByRoomId(roomId);
+        }
+
+    }
 }

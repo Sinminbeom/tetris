@@ -8,6 +8,7 @@ namespace GameServer
         public int boardHeight { get; protected set; } = 20;
 
         public bool[,] _tiles;
+        public Tetromino Tetromino { get; protected set; } = new Tetromino();
 
         public Board()
         {

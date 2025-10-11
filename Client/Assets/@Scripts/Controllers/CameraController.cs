@@ -10,7 +10,8 @@ public class CameraController : MonoBehaviour
 	private void Start()
 	{
 		Camera.main.orthographicSize = 12;
-    }
+        //Screen.SetResolution(2560, 1600, false);
+	}
 
 	private void LateUpdate()
 	{

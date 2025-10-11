@@ -5,10 +5,8 @@ using UnityEngine;
 
 public class PlayerManager
 {
-    public PlayerInfo PlayerInfo { get; private set; }
-    public void Load(PlayerInfo playerInfo)
-    {
-        PlayerInfo = playerInfo;
-    }
+
+    public PlayerInfo MyPlayerInfo { get; set; }
+    public PlayerInfo EnemyPlayerInfo { get; set; }
 
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Google.Protobuf.Protocol;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,12 +14,13 @@ public class EnemyPlayerFactory : IMultiPlayerFactory
         this.multiPlayerInfoFactory = multiPlayerInfoFactory;
     }
 
-    public IPlayer CreatePlayer()
+    public IPlayer CreatePlayer(PlayerInfo playerInfo)
     {
         IPlayer player = new EnemyPlayer();
 
         IBoard board = this.multiPlayerInfoFactory.CreateBoard();
         player.Board = board;
+        player.PlayerInfo = playerInfo;
 
         return player;
     }

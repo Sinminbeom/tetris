@@ -13,6 +13,5 @@ public class EnemyPlayer : abMultiPlayer
     public override void Init()
     {
         Board.Init();
-        Board.Spawn();
     }
 }

@@ -48,8 +48,10 @@ namespace Server
                 if (Player == null)
                     return;
 
-                GameRoom room = GameLogic.Instance.Find(1);
-				// TODO
+                GameLogic.Instance.Remove(Player.Room.RoomInfo.RoomId);
+
+                //GameRoom room = GameLogic.Instance.Find(1);
+                // TODO
                 //room.Push(room.LeaveGame, MyHero.ObjectId, false);
             });
 

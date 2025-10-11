@@ -52,6 +52,7 @@ message C_CreateRoomReq
 
 message S_CreateRoomRes
 {
+	RoomInfo roomInfo = 1;
 	ECreateRoomResult result = 2;
 }
 
@@ -72,10 +73,56 @@ message C_EnterGame
 
 message S_EnterGame 
 {
-	repeated PlayerInfo playerInfos = 1;
+	RoomInfo roomInfo = 1;
+	repeated PlayerInfo playerInfos = 2;
 }
 
 message S_JoinGame
 {
 	PlayerInfo playerInfo = 1;
+}
+
+message C_PlayerState
+{
+	PlayerInfo playerInfo = 1;
+}
+
+message S_PlayerState
+{
+	PlayerInfo playerInfo = 1;
+}
+
+message S_StartGame
+{
+	RoomInfo roomInfo = 1;
+}
+
+message C_SpawnTetromino
+{
+	ETetrominoType tetrominoType = 1;
+}
+
+message S_SpawnTetromino
+{
+	ETetrominoType tetrominoType = 1;
+}
+
+message C_MoveTetromino
+{
+	PositionInfo PositionInfo = 1;
+}
+
+message S_MoveTetromino
+{
+	PositionInfo PositionInfo = 1;
+}
+
+message C_LockBlock
+{
+	repeated Block blocks = 1;
+}
+
+message S_LockBlock
+{
+	repeated Block blocks = 1;
 }
