@@ -25,6 +25,13 @@ public class GameRoomManager
 
         MyPlayer.Init();
         EnemyPlayer.Init();
+
+        RoomInfo.Status = ERoomState.InProgress;
+    }
+
+    public void GameOver()
+    {
+        RoomInfo.Status = ERoomState.Waiting;
     }
 
     public void Load(PlayerInfo playerInfo, PlayerType type)

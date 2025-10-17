@@ -118,8 +118,11 @@ public abstract class abBoard : IBoard
 
             lockBlock.Blocks.Add(new Block { X = (int)node.transform.position.x, Y = (int)node.transform.position.y });
 
-            Vector2Int pos = new Vector2Int(x, y);
-            _tiles[pos.x, pos.y] = node.GetComponent<Tile>();
+            if (x < boardWidth && y < boardHeight)
+            {
+                Vector2Int pos = new Vector2Int(x, y);
+                _tiles[pos.x, pos.y] = node.GetComponent<Tile>();
+            }
 
             node.parent = Root.transform;
 

@@ -10,5 +10,6 @@ public enum E_TETROMINO_STATE
     RightMoving,
     Rotating,
     Dropping,
-    Locked
+    Locked,
+    GameOver
 }

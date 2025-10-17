@@ -106,4 +106,11 @@ class PacketHandler
         ClientSession clientSession = (ClientSession)session;
         clientSession.HandleClearRows(clearRows);
     }
+
+    public static void C_GameOverHandler(PacketSession session, IMessage packet)
+    {
+        C_GameOver gameOver = (C_GameOver)packet;
+        ClientSession clientSession = (ClientSession)session;
+        clientSession.HandleGameOver(gameOver);
+    }
 }

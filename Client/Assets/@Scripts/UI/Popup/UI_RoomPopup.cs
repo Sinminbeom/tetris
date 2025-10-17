@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.EventSystems;
+using UnityEngine;
 
 public class UI_RoomPopup : UI_Popup
 {
@@ -70,6 +71,7 @@ public class UI_RoomPopup : UI_Popup
 
     public void OnJoinGameHandler(S_JoinGame joinGame)
     {
+        Managers.Player.EnemyPlayerInfo = joinGame.PlayerInfo;
         Managers.GameRoom.EnemyPlayerInfo = Managers.Player.EnemyPlayerInfo;
         GetText((int)Texts.EnemyPlayerLabelText).text = Managers.GameRoom.EnemyPlayerInfo.Name;
     }

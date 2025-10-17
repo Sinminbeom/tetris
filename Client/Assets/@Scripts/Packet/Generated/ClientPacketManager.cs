@@ -31,6 +31,8 @@ public enum MsgId
 	S_LockBlock = 23,
 	C_ClearRows = 24,
 	S_ClearRows = 25,
+	C_GameOver = 26,
+	S_GameOver = 27,
 }
 
 class PacketManager
@@ -79,7 +81,9 @@ class PacketManager
 		_onRecv.Add((ushort)MsgId.S_LockBlock, MakePacket<S_LockBlock>);
 		_handler.Add((ushort)MsgId.S_LockBlock, PacketHandler.S_LockBlockHandler);		
 		_onRecv.Add((ushort)MsgId.S_ClearRows, MakePacket<S_ClearRows>);
-		_handler.Add((ushort)MsgId.S_ClearRows, PacketHandler.S_ClearRowsHandler);
+		_handler.Add((ushort)MsgId.S_ClearRows, PacketHandler.S_ClearRowsHandler);		
+		_onRecv.Add((ushort)MsgId.S_GameOver, MakePacket<S_GameOver>);
+		_handler.Add((ushort)MsgId.S_GameOver, PacketHandler.S_GameOverHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

@@ -88,7 +88,7 @@ public class UI_LogInPopup : UI_Popup
 
     void OnClickCloseButton(PointerEventData evt)
     {
-        ClosePopupUI();
+        //ClosePopupUI();
     }
 
     void OnClickSignUpButton(PointerEventData evt)
