@@ -43,7 +43,7 @@ public class LockedState : abState
         }
         else
         {
-            stateComponents.ChangeState((int)E_TETROMINO_STATE.Idle);
+            stateComponents.ChangeState((int)E_TETROMINO_STATE.GameOver);
         }
     }
 }

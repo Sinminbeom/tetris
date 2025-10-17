@@ -17,6 +17,7 @@ public class TetrominoStateLists : StateLists
             { (int)E_TETROMINO_STATE.Rotating, new RotatingState(this, (int)E_TETROMINO_STATE.Rotating) },
             { (int)E_TETROMINO_STATE.Dropping, new DroppingState(this, (int)E_TETROMINO_STATE.Dropping) },
             { (int)E_TETROMINO_STATE.Locked, new LockedState(this, (int)E_TETROMINO_STATE.Locked) },
+            { (int)E_TETROMINO_STATE.GameOver, new GameOverState(this, (int)E_TETROMINO_STATE.GameOver) },
         };
     }
 }

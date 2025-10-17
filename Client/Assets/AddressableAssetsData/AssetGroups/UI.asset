@@ -17,12 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 9ea22d898ce08c948aea6a3601608e4b
   m_SerializeEntries:
-  - m_GUID: fd33f0530e54ef945b9896feee9c889e
-    m_Address: UI_GameOverPopup
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Preload
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f2063e79addd49844b3092f72b9d270d
     m_Address: UI_LogInPopup
     m_ReadOnly: 0
@@ -55,6 +49,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9f3dd22d0707a474a953d7cec4237608
     m_Address: UI_RoomPopup
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dab5de8b113fea5439585e2f6369c4c2
+    m_Address: UI_GameOverPopup
     m_ReadOnly: 0
     m_SerializedLabels:
     - Preload

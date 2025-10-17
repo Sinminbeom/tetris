@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class MyTetromino : abMultiTetromino
 {
-    private StateComponents stateComponents;
+    public StateComponents StateComponents { get; set; }
     protected override void Awake()
     {
         base.Awake();
-        stateComponents = new StateComponents(this, new TetrominoStateLists(), (int)E_TETROMINO_STATE.Falling);
+        StateComponents = new StateComponents(this, new TetrominoStateLists(), (int)E_TETROMINO_STATE.Falling);
     }
     protected override void Start()
     {
@@ -19,7 +19,7 @@ public class MyTetromino : abMultiTetromino
     {
         base.Update();
 
-        stateComponents.OnChangeState();
-        stateComponents.OnProcEveryFrame();
+        StateComponents.OnChangeState();
+        StateComponents.OnProcEveryFrame();
     }
 }

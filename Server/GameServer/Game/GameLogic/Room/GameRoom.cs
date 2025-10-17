@@ -23,7 +23,7 @@ namespace GameServer
 		List<Player> _players = new List<Player>();
 		public List<Player> Players {  get { return _players; } }
 
-		public Player GetOtherPlayer(Player player)
+        public Player GetOtherPlayer(Player player)
 		{
             foreach (Player _player in _players)
             {
@@ -86,6 +86,16 @@ namespace GameServer
             {
 				_player.Session.Send(startGame);
             }
+        }
+
+		public void GameOver(Player player)
+		{
+            this.RoomInfo.Status = ERoomState.Finished;
+
+			S_GameOver gameOver = new S_GameOver();
+			Player otherPlayer = GetOtherPlayer(player);
+
+            otherPlayer.Session.Send(gameOver);
         }
 
         /*

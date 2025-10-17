@@ -121,5 +121,16 @@ class PacketHandler
 
         Managers.GameRoom.EnemyPlayer.Board.ClearRows(clearRows.Rows.ToList());
     }
+
+    public static void S_GameOverHandler(PacketSession session, IMessage packet)
+    {
+        S_GameOver gameOver = (S_GameOver)packet;
+
+        UI_GameOverPopup gameOverPopup = Managers.UI.ShowPopupUI<UI_GameOverPopup>();
+        gameOverPopup.OnGameOver(true);
+
+        MyTetromino myTetromino = (MyTetromino)Managers.GameRoom.MyPlayer.Board.Tetromino;
+        myTetromino.StateComponents.ChangeState((int)E_TETROMINO_STATE.Idle);
+    }
 }
 

@@ -135,3 +135,12 @@ message S_ClearRows
 {
     repeated int32 rows = 1;
 }
+
+message C_GameOver
+{
+}
+
+message S_GameOver
+{
+
+}

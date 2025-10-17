@@ -189,6 +189,12 @@ namespace Server
             otherPlayer.Session.Send(clearRows);
         }
 
+        public void HandleGameOver(C_GameOver gameOverPacket)
+        {
+            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+            gameRoom.GameOver(Player);
+        }
+
         Player MakePlayerFromPlayerDb(PlayerDb playerDb)
         {
             Player player = new Player();

@@ -23,6 +23,8 @@ namespace GameServer
             _roomList.Add(gameRoom);
             _roomDict.Add(_roomId, gameRoom);
 
+            _roomId++;
+
             return gameRoom.RoomInfo;
         }
 
