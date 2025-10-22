@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class GameRoomManager
 {
+    public int SelectedRoomIndex { get; set; }
+
     public enum PlayerType
     {
         MyPlayer,

@@ -65,6 +65,11 @@ public class UI_CreateRoomPopup : UI_Popup
         if (createRoomRes.Result == ECreateRoomResult.Success)
         {
             UI_RoomPopup roomPopup = Managers.UI.ShowPopupUI<UI_RoomPopup>();
+            roomPopup.SetInfo(() =>
+            {
+                C_RoomListReq reqPacket = new C_RoomListReq();
+                Managers.Network.Send(reqPacket);
+            });
             roomPopup.OnCreateRoomResHandler(createRoomRes);
         }
     }

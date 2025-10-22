@@ -7,6 +7,7 @@ using ServerCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace Server
@@ -61,8 +62,6 @@ namespace Server
 
             List<GameRoom> rooms = GameLogic.Instance.GameRooms;
 
-            Console.WriteLine($"rooms.Count = {rooms.Count}");
-
             foreach (GameRoom room in rooms)
             {
                 roomListRes.Rooms.Add(room.RoomInfo);
@@ -94,51 +93,79 @@ namespace Server
             });
         }
 
-        public void HandleDeleteRoomReq(C_DeleteRoomReq deleteRoomReq)
-        {
-            S_DeleteRoomRes deleteRoomRes = new S_DeleteRoomRes();
-
-            // TODO : 사람이 들어가 잇으면 안되고 게임중이면 안되고
-            GameLogic.Instance.Remove(deleteRoomReq.RoomIndex);
-
-            deleteRoomRes.Result = EDeleteRoomResult.Success;
-
-            Send(deleteRoomRes);
-        }
-
         public void HandleEnterGame(C_EnterGame enterGamePacket)
         {
             GameRoom gameRoom = GameLogic.Instance.FindByIndex(enterGamePacket.RoomIndex);
+
+            if (gameRoom == null)
+                return;
+
             gameRoom.EnterGame(Player);
+
+            S_EnterGame enterGame = new S_EnterGame();
+            enterGame.RoomInfo = gameRoom.RoomInfo;
 
             Player otherPlayer = gameRoom.GetOtherPlayer(Player);
 
-            S_EnterGame enterGame = new S_EnterGame();
-
             if (otherPlayer != null)
             {
-                enterGame.RoomInfo = gameRoom.RoomInfo;
                 enterGame.PlayerInfos.Add(otherPlayer.PlayerInfo);
+
+                S_JoinGame joinGame = new S_JoinGame();
+                joinGame.PlayerInfo = Player.PlayerInfo;
+                otherPlayer.Session.Send(joinGame);
             }
+
             Send(enterGame);
+        }
+
+        public void HandleLeaveGame(C_LeaveGame leaveGamePacket)
+        {
+            GameRoom gameRoom = GameLogic.Instance.FindByIndex(leaveGamePacket.RoomIndex);
+
+            if (gameRoom == null)
+                return;
+
+            gameRoom.LeaveGame(Player);
+
+            // 나 자신
+            S_LeaveGame leaveGame = new S_LeaveGame();
+            Send(leaveGame);
+
+            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            //if (otherPlayer == null)
+            //    return;
+
+            if (otherPlayer == null)
+            {
+                GameLogic.Instance.Remove(gameRoom.RoomInfo.RoomId);
+                return;
+            }
+
+            // 상대방
+            S_LeavePlayer leavePlayer = new S_LeavePlayer();
+            otherPlayer.Session.Send(leavePlayer);
         }
 
         public void HandlePlayerState(C_PlayerState playerStatePacket)
         {
             GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
-            foreach (Player player in gameRoom.Players)
-            {
-                if (player.PlayerInfo.PlayerId == playerStatePacket.PlayerInfo.PlayerId)
-                {
-                    player.PlayerInfo = playerStatePacket.PlayerInfo;
-                }
-                else
-                {
-                    S_PlayerState playerState = new S_PlayerState();
-                    playerState.PlayerInfo = playerStatePacket.PlayerInfo;
-                    player.Session.Send(playerState);
-                }
-            }
+
+            if (gameRoom == null)
+                return;
+
+            Player.PlayerInfo = playerStatePacket.PlayerInfo;
+
+            // 상대방 패킷 전송
+            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            if (otherPlayer == null)
+                return;
+
+            S_PlayerState playerState = new S_PlayerState();
+            playerState.PlayerInfo = playerStatePacket.PlayerInfo;
+            otherPlayer.Session.Send(playerState);
 
             gameRoom.CheckAllReady();
         }
@@ -147,9 +174,15 @@ namespace Server
         {
             GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
 
+            if (gameRoom == null)
+                return;
+
             Player.Board.Tetromino.type = spawnTetrominoPacket.TetrominoType;
 
             Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            if (otherPlayer == null)
+                return;
 
             S_SpawnTetromino spawn = new S_SpawnTetromino();
             spawn.TetrominoType = spawnTetrominoPacket.TetrominoType;
@@ -161,9 +194,15 @@ namespace Server
         {
             GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
 
+            if (gameRoom == null)
+                return;
+
             Player.Board.Tetromino.positionInfo = moveTetrominoPacket.PositionInfo;
 
             Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            if (otherPlayer == null)
+                return;
 
             S_MoveTetromino moveTetromino = new S_MoveTetromino();
             moveTetromino.PositionInfo = Player.Board.Tetromino.positionInfo;
@@ -173,7 +212,14 @@ namespace Server
         public void HandleLockBlock(C_LockBlock lockBlockPacket)
         {
             GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+
+            if (gameRoom == null)
+                return;
+
             Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            if (otherPlayer == null)
+                return;
 
             S_LockBlock lockBlock = new S_LockBlock();
             otherPlayer.Session.Send(lockBlock);
@@ -182,7 +228,14 @@ namespace Server
         public void HandleClearRows(C_ClearRows clearRowsPacket)
         {
             GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+
+            if (gameRoom == null)
+                return;
+
             Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+
+            if (otherPlayer == null)
+                return;
 
             S_ClearRows clearRows = new S_ClearRows();
             clearRows.Rows.AddRange(clearRowsPacket.Rows);
@@ -192,6 +245,10 @@ namespace Server
         public void HandleGameOver(C_GameOver gameOverPacket)
         {
             GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+
+            if (gameRoom == null)
+                return;
+
             gameRoom.GameOver(Player);
         }
 

@@ -15,13 +15,8 @@ namespace GameServer
 	{
 		public RoomInfo RoomInfo { get; set; } = new RoomInfo();
 
-		public int PlayerCount
-		{
-			get { return _players.Count; }
-		}
-
-		List<Player> _players = new List<Player>();
-		public List<Player> Players {  get { return _players; } }
+        HashSet<Player> _players = new HashSet<Player>();
+		public HashSet<Player> Players {  get { return _players; } }
 
         public Player GetOtherPlayer(Player player)
 		{
@@ -50,25 +45,18 @@ namespace GameServer
 		{
 			player.Room = this;
 			_players.Add(player);
+			RoomInfo.PlayerCount++;
+        }
 
-			foreach (Player _player in _players)
-			{
-				if (_player.PlayerInfo.PlayerId != player.PlayerInfo.PlayerId)
-				{
-					S_JoinGame joinGame = new S_JoinGame();
-					joinGame.PlayerInfo = player.PlayerInfo;
-					_player.Session.Send(joinGame);
-				}
-			}
+		public void LeaveGame(Player player)
+		{
+            player.Room = null;
+            _players.Remove(player);
+			RoomInfo.PlayerCount--;
         }
 
         public void CheckAllReady()
         {
-            foreach (var player in _players)
-            {
-                Console.WriteLine($"PlayerID: {player.PlayerInfo.Name}, State: {player.PlayerInfo.State}");
-            }
-
             if (_players.Count == 2 && _players.All(p => p.PlayerInfo.State == EPlayerState.Ready))
             {
                 StartGame();
@@ -84,16 +72,20 @@ namespace GameServer
 
             foreach (Player _player in _players)
             {
-				_player.Session.Send(startGame);
+                _player.PlayerInfo.State = EPlayerState.Playing;
+                _player.Session.Send(startGame);
             }
         }
 
 		public void GameOver(Player player)
 		{
-            this.RoomInfo.Status = ERoomState.Finished;
+			this.RoomInfo.Status = ERoomState.Waiting;
 
 			S_GameOver gameOver = new S_GameOver();
 			Player otherPlayer = GetOtherPlayer(player);
+
+			player.PlayerInfo.State = EPlayerState.NotReady;
+            //otherPlayer.PlayerInfo.State = EPlayerState.NotReady;
 
             otherPlayer.Session.Send(gameOver);
         }

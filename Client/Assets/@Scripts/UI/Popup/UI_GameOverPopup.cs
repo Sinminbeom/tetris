@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,6 +33,9 @@ public class UI_GameOverPopup : UI_Popup
     public void OnGameOver(bool isWin)
     {
         GetText((int)Texts.ResultLabelText).text = isWin ? "You Win!" : "You Lose!";
+
+        Managers.Player.MyPlayerInfo.State = EPlayerState.NotReady;
+        Managers.Player.EnemyPlayerInfo.State = EPlayerState.NotReady;
     }
 
     public void OnClickCloseButton(PointerEventData evt)
@@ -39,8 +43,11 @@ public class UI_GameOverPopup : UI_Popup
         ClosePopupUI();
 
         Managers.Scene.LoadScene(Define.EScene.LobbyScene);
-
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        C_EnterGame enterGame = new C_EnterGame();
+        enterGame.RoomIndex = Managers.GameRoom.SelectedRoomIndex;
+        Managers.Network.Send(enterGame);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)

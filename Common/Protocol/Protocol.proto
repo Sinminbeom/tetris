@@ -34,17 +34,6 @@ message S_LogInRes
 	PlayerInfo playerInfo = 2;
 }
 
-message C_DeleteRoomReq
-{
-	int32 roomIndex = 1;
-}
-
-message S_DeleteRoomRes
-{
-	int32 roomIndex = 1;
-	EDeleteRoomResult result = 2;
-}
-
 message C_CreateRoomReq
 {
 	string name = 1;
@@ -80,6 +69,19 @@ message S_EnterGame
 message S_JoinGame
 {
 	PlayerInfo playerInfo = 1;
+}
+
+message C_LeaveGame
+{
+	int32 roomIndex = 1;
+}
+
+message S_LeaveGame
+{
+}
+
+message S_LeavePlayer
+{
 }
 
 message C_PlayerState
@@ -142,5 +144,4 @@ message C_GameOver
 
 message S_GameOver
 {
-
 }

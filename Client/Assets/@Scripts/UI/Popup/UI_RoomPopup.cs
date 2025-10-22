@@ -2,8 +2,9 @@ using Google.Protobuf.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.EventSystems;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Playables;
 
 public class UI_RoomPopup : UI_Popup
 {
@@ -46,44 +47,66 @@ public class UI_RoomPopup : UI_Popup
     public void OnCreateRoomResHandler(S_CreateRoomRes createRoomRes)
     {
         Managers.GameRoom.MyPlayerInfo = Managers.Player.MyPlayerInfo;
-        GetText((int)Texts.MyPlayerLabelText).text = Managers.Player.MyPlayerInfo.Name;
-
         Managers.GameRoom.RoomInfo = createRoomRes.RoomInfo;
 
-        GetText((int)Texts.RoomNameLabelText).text = createRoomRes.RoomInfo.Name;
+        RefreshUI();
     }
 
     public void OnEnterGameHandler(S_EnterGame enterGame)
     {
+        Managers.GameRoom.RoomInfo = enterGame.RoomInfo;
+
         Managers.GameRoom.MyPlayerInfo = Managers.Player.MyPlayerInfo;
-        GetText((int)Texts.MyPlayerLabelText).text = Managers.GameRoom.MyPlayerInfo.Name;
 
         List<PlayerInfo> playerInfos = enterGame.PlayerInfos.ToList();
 
-        Managers.Player.EnemyPlayerInfo = playerInfos[0];
-        Managers.GameRoom.EnemyPlayerInfo = Managers.Player.EnemyPlayerInfo;
-        GetText((int)Texts.EnemyPlayerLabelText).text = Managers.GameRoom.EnemyPlayerInfo.Name;
+        if (playerInfos.Count > 0)
+        {
+            Managers.Player.EnemyPlayerInfo = playerInfos[0];
+            Managers.GameRoom.EnemyPlayerInfo = Managers.Player.EnemyPlayerInfo;
+        }
 
-        Managers.GameRoom.RoomInfo = enterGame.RoomInfo;
-
-        GetText((int)Texts.RoomNameLabelText).text = enterGame.RoomInfo.Name;
+        RefreshUI();
     }
 
     public void OnJoinGameHandler(S_JoinGame joinGame)
     {
         Managers.Player.EnemyPlayerInfo = joinGame.PlayerInfo;
         Managers.GameRoom.EnemyPlayerInfo = Managers.Player.EnemyPlayerInfo;
-        GetText((int)Texts.EnemyPlayerLabelText).text = Managers.GameRoom.EnemyPlayerInfo.Name;
+
+        RefreshUI();
+    }
+
+    public void OnLeaveGameHandler(S_LeaveGame leaveGame)
+    {
+        Managers.GameRoom.SelectedRoomIndex = 0;
+        Managers.GameRoom.RoomInfo = null;
+
+        Managers.GameRoom.EnemyPlayer = null;
+        Managers.GameRoom.EnemyPlayerInfo = null;
+
+        Managers.GameRoom.MyPlayer = null;
+        Managers.GameRoom.MyPlayerInfo = null;
+
+        _onClosePopup?.Invoke();
+        ClosePopupUI();
+    }
+
+    public void OnLeavePlayerHandler(S_LeavePlayer leavePlayer)
+    {
+        Managers.Player.EnemyPlayerInfo = null;
+        Managers.GameRoom.EnemyPlayerInfo = null;
+        Managers.GameRoom.EnemyPlayer = null;
+
+        RefreshUI();
     }
 
     public void OnPlayerStateHandler(S_PlayerState playerState)
     {
         Managers.Player.EnemyPlayerInfo = playerState.PlayerInfo;
+        Managers.GameRoom.EnemyPlayerInfo = Managers.Player.EnemyPlayerInfo;
 
-        if (playerState.PlayerInfo.State == EPlayerState.Ready)
-            GetObject((int)GameObjects.EnemyPlayerState).gameObject.SetActive(true);
-        else
-            GetObject((int)GameObjects.EnemyPlayerState).gameObject.SetActive(false);
+        RefreshUI();
     }
 
     public void OnStartGameHandler(S_StartGame startGame)
@@ -92,6 +115,9 @@ public class UI_RoomPopup : UI_Popup
 
         Managers.Player.MyPlayerInfo.State = EPlayerState.Playing;
         Managers.Player.EnemyPlayerInfo.State = EPlayerState.Playing;
+
+        Managers.GameRoom.MyPlayerInfo = Managers.Player.MyPlayerInfo;
+        Managers.GameRoom.EnemyPlayerInfo = Managers.Player.EnemyPlayerInfo;
 
         Managers.Scene.LoadScene(Define.EScene.MultiGameScene);
     }
@@ -103,25 +129,47 @@ public class UI_RoomPopup : UI_Popup
 
     void OnClickCloseButton(PointerEventData evt)
     {
-        ClosePopupUI();
+        C_LeaveGame leaveGame = new C_LeaveGame();
+        leaveGame.RoomIndex = Managers.GameRoom.SelectedRoomIndex;
+        Managers.Network.Send(leaveGame);
     }
 
     public void OnClickStartButton(PointerEventData evt)
     {
-        if (Managers.Player.MyPlayerInfo.State == EPlayerState.NotReady)
-        {
-            Managers.Player.MyPlayerInfo.State = EPlayerState.Ready;
-            GetObject((int)GameObjects.MyPlayerState).gameObject.SetActive(true);
-        }
-        else
-        {
-            Managers.Player.MyPlayerInfo.State = EPlayerState.NotReady;
-            GetObject((int)GameObjects.MyPlayerState).gameObject.SetActive(false);
-        }
+        ToggleReadyState();
 
         C_PlayerState playerState = new C_PlayerState();
         playerState.PlayerInfo = Managers.Player.MyPlayerInfo;
         Managers.Network.Send(playerState);
     }
 
+    void ToggleReadyState()
+    {
+        bool isReady = Managers.Player.MyPlayerInfo.State == EPlayerState.Ready;
+        Managers.Player.MyPlayerInfo.State = isReady ? EPlayerState.NotReady : EPlayerState.Ready;
+
+        RefreshUI();
+    }
+
+    public void RefreshUI()
+    {
+        // 방 이름
+        GetText((int)Texts.RoomNameLabelText).text = Managers.GameRoom.RoomInfo?.Name ?? "";
+
+        // 내 플레이어 이름
+        var myInfo = Managers.GameRoom.MyPlayerInfo;
+        GetText((int)Texts.MyPlayerLabelText).text = myInfo?.Name ?? "";
+
+        // 상대 플레이어 이름
+        var enemyInfo = Managers.GameRoom.EnemyPlayerInfo;
+        GetText((int)Texts.EnemyPlayerLabelText).text = enemyInfo?.Name ?? "";
+
+        // 내 Ready 표시
+        bool myReady = myInfo?.State == EPlayerState.Ready;
+        GetObject((int)GameObjects.MyPlayerState).gameObject.SetActive(myReady);
+
+        // 상대 Ready 표시
+        bool enemyReady = enemyInfo?.State == EPlayerState.Ready;
+        GetObject((int)GameObjects.EnemyPlayerState).gameObject.SetActive(enemyReady);
+    }
 }

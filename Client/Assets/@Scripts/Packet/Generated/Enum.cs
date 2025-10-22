@@ -31,23 +31,23 @@ namespace Google.Protobuf.Protocol {
             "Uk9NSU5PX1NUQVRFX1JPVEFUSU5HEAQSHQoZRVRFVFJPTUlOT19TVEFURV9E",
             "Uk9QUElORxAFEhsKF0VURVRST01JTk9fU1RBVEVfTE9DS0VEEAYqTgoPRUdh",
             "bWVPYmplY3RUeXBlEhoKFkVHQU1FX09CSkVDVF9UWVBFX05PTkUQABIfChtF",
-            "R0FNRV9PQkpFQ1RfVFlQRV9URVRST01JTk8QASpcCgpFUm9vbVN0YXRlEhcK",
+            "R0FNRV9PQkpFQ1RfVFlQRV9URVRST01JTk8QASpCCgpFUm9vbVN0YXRlEhcK",
             "E0VST09NX1NUQVRFX1dBSVRJTkcQABIbChdFUk9PTV9TVEFURV9JTl9QUk9H",
-            "UkVTUxABEhgKFEVST09NX1NUQVRFX0ZJTklTSEVEEAIqbwoNRVNpZ25VcFJl",
-            "c3VsdBIYChRFU0lHTl9VUF9SRVNVTFRfTk9ORRAAEhsKF0VTSUdOX1VQX1JF",
-            "U1VMVF9TVUNDRVNTEAESJwojRVNJR05fVVBfUkVTVUxUX0ZBSUxfRFVQTElD",
-            "QVRFX05BTUUQAipvCgxFTG9nSW5SZXN1bHQSFwoTRUxPR19JTl9SRVNVTFRf",
-            "Tk9ORRAAEhoKFkVMT0dfSU5fUkVTVUxUX1NVQ0NFU1MQARIqCiZFTE9HX0lO",
-            "X1JFU1VMVF9GQUlMX0lOQ09SUkVDVF9QQVNTV09SRBACKlIKEUVEZWxldGVS",
-            "b29tUmVzdWx0EhwKGEVERUxFVEVfUk9PTV9SRVNVTFRfTk9ORRAAEh8KG0VE",
-            "RUxFVEVfUk9PTV9SRVNVTFRfU1VDQ0VTUxABKn8KEUVDcmVhdGVSb29tUmVz",
-            "dWx0EhwKGEVDUkVBVEVfUk9PTV9SRVNVTFRfTk9ORRAAEh8KG0VDUkVBVEVf",
-            "Uk9PTV9SRVNVTFRfU1VDQ0VTUxABEisKJ0VDUkVBVEVfUk9PTV9SRVNVTFRf",
-            "RkFJTF9EVVBMSUNBVEVfTkFNRRACKl8KDEVQbGF5ZXJTdGF0ZRIXChNFUExB",
-            "WUVSX1NUQVRFX1JFQURZEAASGwoXRVBMQVlFUl9TVEFURV9OT1RfUkVBRFkQ",
-            "ARIZChVFUExBWUVSX1NUQVRFX1BMQVlJTkcQAipBCg5FVGV0cm9taW5vVHlw",
-            "ZRIFCgFJEAASBQoBTxABEgUKAVQQAhIFCgFTEAMSBQoBWhAEEgUKAUoQBRIF",
-            "CgFMEAZCG6oCGEdvb2dsZS5Qcm90b2J1Zi5Qcm90b2NvbGIGcHJvdG8z"));
+            "UkVTUxABKm8KDUVTaWduVXBSZXN1bHQSGAoURVNJR05fVVBfUkVTVUxUX05P",
+            "TkUQABIbChdFU0lHTl9VUF9SRVNVTFRfU1VDQ0VTUxABEicKI0VTSUdOX1VQ",
+            "X1JFU1VMVF9GQUlMX0RVUExJQ0FURV9OQU1FEAIqbwoMRUxvZ0luUmVzdWx0",
+            "EhcKE0VMT0dfSU5fUkVTVUxUX05PTkUQABIaChZFTE9HX0lOX1JFU1VMVF9T",
+            "VUNDRVNTEAESKgomRUxPR19JTl9SRVNVTFRfRkFJTF9JTkNPUlJFQ1RfUEFT",
+            "U1dPUkQQAipSChFFRGVsZXRlUm9vbVJlc3VsdBIcChhFREVMRVRFX1JPT01f",
+            "UkVTVUxUX05PTkUQABIfChtFREVMRVRFX1JPT01fUkVTVUxUX1NVQ0NFU1MQ",
+            "ASp/ChFFQ3JlYXRlUm9vbVJlc3VsdBIcChhFQ1JFQVRFX1JPT01fUkVTVUxU",
+            "X05PTkUQABIfChtFQ1JFQVRFX1JPT01fUkVTVUxUX1NVQ0NFU1MQARIrCidF",
+            "Q1JFQVRFX1JPT01fUkVTVUxUX0ZBSUxfRFVQTElDQVRFX05BTUUQAipfCgxF",
+            "UGxheWVyU3RhdGUSFwoTRVBMQVlFUl9TVEFURV9SRUFEWRAAEhsKF0VQTEFZ",
+            "RVJfU1RBVEVfTk9UX1JFQURZEAESGQoVRVBMQVlFUl9TVEFURV9QTEFZSU5H",
+            "EAIqQQoORVRldHJvbWlub1R5cGUSBQoBSRAAEgUKAU8QARIFCgFUEAISBQoB",
+            "UxADEgUKAVoQBBIFCgFKEAUSBQoBTBAGQhuqAhhHb29nbGUuUHJvdG9idWYu",
+            "UHJvdG9jb2xiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Google.Protobuf.Protocol.ETetrominoState), typeof(global::Google.Protobuf.Protocol.EGameObjectType), typeof(global::Google.Protobuf.Protocol.ERoomState), typeof(global::Google.Protobuf.Protocol.ESignUpResult), typeof(global::Google.Protobuf.Protocol.ELogInResult), typeof(global::Google.Protobuf.Protocol.EDeleteRoomResult), typeof(global::Google.Protobuf.Protocol.ECreateRoomResult), typeof(global::Google.Protobuf.Protocol.EPlayerState), typeof(global::Google.Protobuf.Protocol.ETetrominoType), }, null, null));
@@ -74,7 +74,6 @@ namespace Google.Protobuf.Protocol {
   public enum ERoomState {
     [pbr::OriginalName("EROOM_STATE_WAITING")] Waiting = 0,
     [pbr::OriginalName("EROOM_STATE_IN_PROGRESS")] InProgress = 1,
-    [pbr::OriginalName("EROOM_STATE_FINISHED")] Finished = 2,
   }
 
   public enum ESignUpResult {

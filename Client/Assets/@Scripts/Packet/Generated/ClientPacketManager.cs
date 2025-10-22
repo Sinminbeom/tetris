@@ -11,28 +11,29 @@ public enum MsgId
 	S_SignUpRes = 3,
 	C_LogInReq = 4,
 	S_LogInRes = 5,
-	C_DeleteRoomReq = 6,
-	S_DeleteRoomRes = 7,
-	C_CreateRoomReq = 8,
-	S_CreateRoomRes = 9,
-	C_RoomListReq = 10,
-	S_RoomListRes = 11,
-	C_EnterGame = 12,
-	S_EnterGame = 13,
-	S_JoinGame = 14,
-	C_PlayerState = 15,
-	S_PlayerState = 16,
-	S_StartGame = 17,
-	C_SpawnTetromino = 18,
-	S_SpawnTetromino = 19,
-	C_MoveTetromino = 20,
-	S_MoveTetromino = 21,
-	C_LockBlock = 22,
-	S_LockBlock = 23,
-	C_ClearRows = 24,
-	S_ClearRows = 25,
-	C_GameOver = 26,
-	S_GameOver = 27,
+	C_CreateRoomReq = 6,
+	S_CreateRoomRes = 7,
+	C_RoomListReq = 8,
+	S_RoomListRes = 9,
+	C_EnterGame = 10,
+	S_EnterGame = 11,
+	S_JoinGame = 12,
+	C_LeaveGame = 13,
+	S_LeaveGame = 14,
+	S_LeavePlayer = 15,
+	C_PlayerState = 16,
+	S_PlayerState = 17,
+	S_StartGame = 18,
+	C_SpawnTetromino = 19,
+	S_SpawnTetromino = 20,
+	C_MoveTetromino = 21,
+	S_MoveTetromino = 22,
+	C_LockBlock = 23,
+	S_LockBlock = 24,
+	C_ClearRows = 25,
+	S_ClearRows = 26,
+	C_GameOver = 27,
+	S_GameOver = 28,
 }
 
 class PacketManager
@@ -60,8 +61,6 @@ class PacketManager
 		_handler.Add((ushort)MsgId.S_SignUpRes, PacketHandler.S_SignUpResHandler);		
 		_onRecv.Add((ushort)MsgId.S_LogInRes, MakePacket<S_LogInRes>);
 		_handler.Add((ushort)MsgId.S_LogInRes, PacketHandler.S_LogInResHandler);		
-		_onRecv.Add((ushort)MsgId.S_DeleteRoomRes, MakePacket<S_DeleteRoomRes>);
-		_handler.Add((ushort)MsgId.S_DeleteRoomRes, PacketHandler.S_DeleteRoomResHandler);		
 		_onRecv.Add((ushort)MsgId.S_CreateRoomRes, MakePacket<S_CreateRoomRes>);
 		_handler.Add((ushort)MsgId.S_CreateRoomRes, PacketHandler.S_CreateRoomResHandler);		
 		_onRecv.Add((ushort)MsgId.S_RoomListRes, MakePacket<S_RoomListRes>);
@@ -70,6 +69,10 @@ class PacketManager
 		_handler.Add((ushort)MsgId.S_EnterGame, PacketHandler.S_EnterGameHandler);		
 		_onRecv.Add((ushort)MsgId.S_JoinGame, MakePacket<S_JoinGame>);
 		_handler.Add((ushort)MsgId.S_JoinGame, PacketHandler.S_JoinGameHandler);		
+		_onRecv.Add((ushort)MsgId.S_LeaveGame, MakePacket<S_LeaveGame>);
+		_handler.Add((ushort)MsgId.S_LeaveGame, PacketHandler.S_LeaveGameHandler);		
+		_onRecv.Add((ushort)MsgId.S_LeavePlayer, MakePacket<S_LeavePlayer>);
+		_handler.Add((ushort)MsgId.S_LeavePlayer, PacketHandler.S_LeavePlayerHandler);		
 		_onRecv.Add((ushort)MsgId.S_PlayerState, MakePacket<S_PlayerState>);
 		_handler.Add((ushort)MsgId.S_PlayerState, PacketHandler.S_PlayerStateHandler);		
 		_onRecv.Add((ushort)MsgId.S_StartGame, MakePacket<S_StartGame>);
