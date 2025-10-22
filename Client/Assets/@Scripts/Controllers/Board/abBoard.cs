@@ -141,8 +141,11 @@ public abstract class abBoard : IBoard
             int x = Mathf.RoundToInt(node.transform.position.x + halfWidth - Pos.x);
             int y = Mathf.RoundToInt(node.transform.position.y + halfHeight - 1);
 
-            Vector2Int pos = new Vector2Int(x, y);
-            _tiles[pos.x, pos.y] = node.GetComponent<Tile>();
+            if (x < boardWidth && y < boardHeight)
+            {
+                Vector2Int pos = new Vector2Int(x, y);
+                _tiles[pos.x, pos.y] = node.GetComponent<Tile>();
+            }
 
             node.parent = Root.transform;
         }

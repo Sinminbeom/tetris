@@ -24,7 +24,6 @@ enum ERoomState
 {
 	EROOM_STATE_WAITING = 0;
 	EROOM_STATE_IN_PROGRESS = 1;
-	EROOM_STATE_FINISHED = 2;
 }
 
 enum ESignUpResult

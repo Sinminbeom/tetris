@@ -98,9 +98,13 @@ public class UI_LobbyScene : UI_Scene
         // 2) C_EnterGame 패킷 전송
         //Managers.Game.SelectedHeroIndex = _selectedHeroIndex;
         //Managers.Scene.LoadScene(EScene.GameScene);
-        UI_RoomPopup roomPopup = Managers.UI.ShowPopupUI<UI_RoomPopup>();
 
-		C_EnterGame enterGame = new C_EnterGame();
+        Managers.GameRoom.SelectedRoomIndex = _selectedRoomIndex;
+
+        UI_RoomPopup roomPopup = Managers.UI.ShowPopupUI<UI_RoomPopup>();
+		roomPopup.SetInfo(SendRoomListReqPacket);
+
+        C_EnterGame enterGame = new C_EnterGame();
 		enterGame.RoomIndex = _selectedRoomIndex;
 
 		Managers.Network.Send(enterGame);
@@ -108,20 +112,10 @@ public class UI_LobbyScene : UI_Scene
 
 	void OnClickCreateRoomButton(PointerEventData evt)
 	{
-		// 1) 캐릭터 최대 개수 확인 후, 바로 팝업.
-		// 2) UI_CreateCharacterPopup에서 나머지 진행.
-		// 3) 캐릭터 생성 팝업 닫힐 때, 캐릭터 목록 다시 요청.
-		var popup = Managers.UI.ShowPopupUI<UI_CreateRoomPopup>();
-		//popup.SetInfo(onRoomChanged: SendRoomListReqPacket);
-	}
-
-	void OnClickDeleteRoomButton(PointerEventData evt)
-	{
-		// 1) 패킷 전송
-		// 2) 답장 오면 캐릭터 삭제 후 Refresh
-		C_DeleteRoomReq reqPacket = new C_DeleteRoomReq();
-		reqPacket.RoomIndex = _selectedRoomIndex;
-		Managers.Network.Send(reqPacket);
+        // 1) 캐릭터 최대 개수 확인 후, 바로 팝업.
+        // 2) UI_CreateCharacterPopup에서 나머지 진행.
+        // 3) 캐릭터 생성 팝업 닫힐 때, 캐릭터 목록 다시 요청.
+        UI_CreateRoomPopup createRoomPopup = Managers.UI.ShowPopupUI<UI_CreateRoomPopup>();
 	}
 
 	public void SendRoomListReqPacket()
@@ -130,23 +124,10 @@ public class UI_LobbyScene : UI_Scene
 		Managers.Network.Send(reqPacket);
 	}
 
-	public void OnDeleteRoomResHandler(S_DeleteRoomRes deleteRoomRes)
-	{
-		if (deleteRoomRes.Result == EDeleteRoomResult.Success)
-		{
-			//GameRoom gameRoom = _rooms[deleteRoomRes.RoomIndex];
-			//_rooms.RemoveAt(gameRoom);
-			RefreshUI();
-		}
-	}
-
     public void OnRoomListResHandler(S_RoomListRes resPacket)
     {
         List<RoomInfo> rooms = resPacket.Rooms.ToList();
-
-		UI_LobbyScene lobbyScene = Managers.UI.GetSceneUI<UI_LobbyScene>();
-
-		lobbyScene.SetInfo(rooms);
+		SetInfo(rooms);
 	}
 
 }

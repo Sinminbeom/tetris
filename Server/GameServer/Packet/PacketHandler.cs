@@ -21,6 +21,13 @@ class PacketHandler
 		clientSession.HandleEnterGame(enterGamePacket);
 	}
 
+    public static void C_LeaveGameHandler(PacketSession session, IMessage packet)
+    {
+        C_LeaveGame leaveGamePacket = (C_LeaveGame)packet;
+        ClientSession clientSession = (ClientSession)session;
+        clientSession.HandleLeaveGame(leaveGamePacket);
+    }
+
     public static void C_MoveHandler(PacketSession session, IMessage packet)
 	{
 		//C_Move movePacket = (C_Move)packet;
@@ -49,13 +56,6 @@ class PacketHandler
         C_LogInReq logInReq = (C_LogInReq)packet;
         ClientSession clientSession = (ClientSession)session;
         clientSession.HandleLogInReq(logInReq);
-    }
-
-	public static void C_DeleteRoomReqHandler(PacketSession session, IMessage packet)
-	{
-        C_DeleteRoomReq deleteRoomReq = (C_DeleteRoomReq)packet;
-        ClientSession clientSession = (ClientSession)session;
-        clientSession.HandleDeleteRoomReq(deleteRoomReq);
     }
 
     public static void C_CreateRoomReqHandler(PacketSession session, IMessage packet)

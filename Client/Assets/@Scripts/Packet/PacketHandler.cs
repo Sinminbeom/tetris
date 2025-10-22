@@ -7,7 +7,6 @@ using UnityEngine;
 using System.Net;
 using System;
 using System.Linq;
-using static Define;
 
 class PacketHandler
 {
@@ -20,6 +19,10 @@ class PacketHandler
     public static void S_SignUpResHandler(PacketSession session, IMessage packet)
     {
         UI_SignUpPopup signUpPopup = Managers.UI.GetLastPopupUI<UI_SignUpPopup>();
+
+        if (signUpPopup == null)
+            return;
+
         S_SignUpRes signUpRes = (S_SignUpRes)packet;
         signUpPopup.OnSignUpHandler(signUpRes);
     }
@@ -27,6 +30,10 @@ class PacketHandler
     public static void S_LogInResHandler(PacketSession session, IMessage packet)
     {
         UI_LogInPopup logInPopup = Managers.UI.GetLastPopupUI<UI_LogInPopup>();
+
+        if (logInPopup == null)
+            return;
+
         S_LogInRes logInRes = (S_LogInRes)packet;
         logInPopup.OnLogInResHandler(logInRes);
     }
@@ -47,6 +54,10 @@ class PacketHandler
         if (createRoomRes.Result == ECreateRoomResult.Success)
         {
             UI_CreateRoomPopup createRoomPopup = Managers.UI.GetLastPopupUI<UI_CreateRoomPopup>();
+
+            if (createRoomPopup == null)
+                return;
+
             createRoomPopup.OnCreateRoomResHandler(createRoomRes);
         }
         else
@@ -58,6 +69,10 @@ class PacketHandler
     public static void S_RoomListResHandler(PacketSession session, IMessage packet)
     {
         UI_LobbyScene lobbyScene = Managers.UI.GetSceneUI<UI_LobbyScene>();
+
+        if (lobbyScene == null)
+            return;
+
         S_RoomListRes roomListRes = (S_RoomListRes)packet;
         lobbyScene.OnRoomListResHandler(roomListRes);
     }
@@ -65,6 +80,10 @@ class PacketHandler
     public static void S_EnterGameHandler(PacketSession session, IMessage packet)
     {
         UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
+
+        if (roomPopup == null)
+            return;
+
         S_EnterGame enterGame = (S_EnterGame)packet;
         roomPopup.OnEnterGameHandler(enterGame);
 
@@ -73,13 +92,43 @@ class PacketHandler
     public static void S_JoinGameHandler(PacketSession session, IMessage packet)
     {
         UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
+
+        if (roomPopup == null)
+            return;
+
         S_JoinGame joinGame = (S_JoinGame)packet;
         roomPopup.OnJoinGameHandler(joinGame);
+    }
+
+    public static void S_LeaveGameHandler(PacketSession session, IMessage packet)
+    {
+        UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
+
+        if (roomPopup == null)
+            return;
+
+        S_LeaveGame leaveGame = (S_LeaveGame)packet;
+        roomPopup.OnLeaveGameHandler(leaveGame);
+    }
+
+    public static void S_LeavePlayerHandler(PacketSession session, IMessage packet)
+    {
+        UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
+
+        if (roomPopup == null)
+            return;
+
+        S_LeavePlayer leavePlayer = (S_LeavePlayer)packet;
+        roomPopup.OnLeavePlayerHandler(leavePlayer);
     }
 
     public static void S_PlayerStateHandler(PacketSession session, IMessage packet)
     {
         UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
+
+        if (roomPopup == null)
+            return;
+
         S_PlayerState playerState = (S_PlayerState)packet;
         roomPopup.OnPlayerStateHandler(playerState);
     }
@@ -87,6 +136,10 @@ class PacketHandler
     public static void S_StartGameHandler(PacketSession session, IMessage packet)
     {
         UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
+
+        if (roomPopup == null)
+            return;
+
         S_StartGame startGame = (S_StartGame)packet;
         roomPopup.OnStartGameHandler(startGame);
     }
@@ -130,7 +183,7 @@ class PacketHandler
         gameOverPopup.OnGameOver(true);
 
         MyTetromino myTetromino = (MyTetromino)Managers.GameRoom.MyPlayer.Board.Tetromino;
-        myTetromino.StateComponents.ChangeState((int)E_TETROMINO_STATE.Idle);
+        myTetromino.ChangeState((int)E_TETROMINO_STATE.Idle);
     }
 }
 
