@@ -23,12 +23,17 @@ namespace GameServer
 		{
 			ConfigManager.LoadConfig();
 
+			//options
+			//	.UseLoggerFactory(_logger)
+			//	.UseSqlServer(ConfigManager.Config.connectionString);
+
 			options
 				.UseLoggerFactory(_logger)
-				.UseSqlServer(ConfigManager.Config.connectionString);
-		}
+				.UseMySql(ConfigManager.Config.connectionString, ServerVersion.AutoDetect(ConfigManager.Config.connectionString));
 
-		protected override void OnModelCreating(ModelBuilder builder)
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
 		{
 			// AccountDbId에 인덱스 걸어준다
 			builder.Entity<PlayerDb>()
