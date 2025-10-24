@@ -1,6 +1,6 @@
 {
 	"dataPath": "../../../../../Client/Assets/@Resources/Data",
-	"ip": "127.0.0.1",
+	"ip": "10.0.0.219",
 	"port": "7777",
-	"connectionString": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=GameDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"
+	"connectionString": "Server=152.67.197.127,3308;Database=GameDB;Uid=zROxKK6CytX4sGnbz/qN9t2dT1nGni+szpn8FHWZrcY=;Pwd=HDE6vx6MXgl/nKW3gaNQFI5dLom599dff0mlf8rCsws=;"
 }

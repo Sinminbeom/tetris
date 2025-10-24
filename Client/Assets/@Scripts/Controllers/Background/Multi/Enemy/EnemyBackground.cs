@@ -7,14 +7,14 @@ public class EnemyBackground : MultiBackground
 
     public override void Init()
     {
-        Color color = Color.red;
+        Color color = Color.white;
 
         Vector2Int enemyBoardPos = Board.Pos;
 
         int halfWidth = ((EnemyBoard)Board).halfWidth;
         int halfHeight = ((EnemyBoard)Board).halfHeight;
 
-        Tile.CreateTile(Root.transform, enemyBoardPos, color, 0);
+        //Tile.CreateTile(Root.transform, enemyBoardPos, color, 0);
 
         // 5 + 10 = 15
         // 5

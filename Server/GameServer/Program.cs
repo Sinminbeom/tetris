@@ -46,14 +46,14 @@ namespace Server
 			ConfigManager.LoadConfig();
 			DataManager.LoadData();
 
-			IPAddress ipAddr = IPAddress.Parse(ConfigManager.Config.ip);			
+			IPAddress ipAddr = IPAddress.Parse(ConfigManager.Config.ip);
 			IPEndPoint endPoint = new IPEndPoint(ipAddr, ConfigManager.Config.port);
 			_listener.Init(endPoint, () => { return SessionManager.Instance.Generate(); });
 			
 			Console.WriteLine("Listening...");
 
-			// GameDbTask
-			{
+            // GameDbTask
+            {
 				Thread t = new Thread(GameDbTask);
 				t.Name = "GameDB";
 				t.Start();
@@ -65,6 +65,6 @@ namespace Server
 			// GameLogic
 			Thread.CurrentThread.Name = "GameLogic";
 			GameLogicTask();
-		}
+        }
 	}
 }
