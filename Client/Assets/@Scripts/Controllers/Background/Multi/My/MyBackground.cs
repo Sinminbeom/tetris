@@ -16,7 +16,7 @@ public class MyBackground : MultiBackground
         int halfWidth = Board.halfWidth;
         int halfHeight = Board.halfHeight;
 
-        Tile.CreateTile(Root.transform, myBoardPos, color, 0);
+        //Tile.CreateTile(Root.transform, myBoardPos, color, 0);
 
         int minWidth = myBoardPos.x - halfWidth;
 
