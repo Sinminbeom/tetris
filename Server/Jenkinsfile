@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    environment {
+        GIT_URI= "https://github.com/Sinminbeom/tetris.git"
+        PROJECT_NAME = "tetris-server"
+        DOCKER_TAG = "1.0.${currentBuild.number}"
+        REMOTE_PATH= "infra_glue/${PROJECT_NAME}"
+        REMOTE_SERVICE_PATH= "${REMOTE_PATH}"
+    }
+    parameters {
+        gitParameter branchFilter: 'origin/(.*)', defaultValue: 'main', name: 'BRANCH', type: 'PT_BRANCH', sortMode: 'DESCENDING_SMART', listSize: '5'
+    }
+    stages {
+        stage('git clone') {
+            steps {
+                git branch: "${params.BRANCH}",
+                url: "${GIT_URI}"
+            }
+        }
+        stage('Docker build') {
+            steps {
+                sh "docker build -f ./Server/Deploy/Dockerfile -t ${PROJECT_NAME}:${DOCKER_TAG} ."
+
+                sh "sed -i 's/<PROJECT_NAME>/${PROJECT_NAME}/g' ./Server/Deploy/docker-compose.yml"
+                sh "sed -i 's/<BUILD_VER>/${DOCKER_TAG}/g' ./Server/Deploy/docker-compose.yml"
+
+            }
+        }
+    }
+}

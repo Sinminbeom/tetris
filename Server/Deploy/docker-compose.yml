@@ -1,0 +1,21 @@
+version: '3'
+services:
+  <PROJECT_NAME>:
+    image: <PROJECT_NAME>:<BUILD_VER>
+    container_name: <PROJECT_NAME>
+    networks:
+      - infra-glue
+    ports:
+      - "7777:7777"
+    environment:
+      - TZ=Asia/Seoul
+    restart: always
+    # volumes:
+    #   - ./log:/log
+
+
+networks:
+  infra-glue:
+    driver: bridge
+    external: true
+    internal: true
