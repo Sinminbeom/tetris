@@ -5,7 +5,7 @@ pipeline {
         PROJECT_NAME = "tetris"
         DOCKER_TAG = "1.0.${currentBuild.number}"
         REMOTE_PATH= "project/infra_glue/${PROJECT_NAME}"
-        REMOTE_SERVICE_PATH = "${REMOTE_PATH}"
+        REMOTE_SERVICE_PATH = "${REMOTE_PATH}/Server/Deploy"
         ENCRYPTION_KEY = credentials('ENCRYPTION_KEY')
     }
     parameters {
@@ -35,7 +35,7 @@ pipeline {
                 transfers: [
                     sshTransfer(cleanRemote: false, excludes: '',
                     execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
-                    remoteDirectory: "${REMOTE_PATH}",
+                    remoteDirectory: "${REMOTE_SERVICE_PATH}",
                     remoteDirectorySDF: false,
                     removePrefix: "Server/Deploy",
                     sourceFiles: "Server/Deploy/docker-compose.yml") ,
@@ -43,7 +43,7 @@ pipeline {
                     sshTransfer(cleanRemote: false, excludes: '',
                     execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
                     execCommand: """
-                        cd ${REMOTE_SERVICE_PATH}/Server/Deploy
+                        cd ${REMOTE_SERVICE_PATH}
                         echo \"docker-compose down\" >> jenkins.log
                         docker-compose down
 
