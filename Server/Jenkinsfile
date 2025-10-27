@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         GIT_URI= "https://github.com/Sinminbeom/tetris.git"
-        PROJECT_NAME = "tetris-server"
+        PROJECT_NAME = "tetris"
         DOCKER_TAG = "1.0.${currentBuild.number}"
         REMOTE_PATH= "project/infra_glue/${PROJECT_NAME}"
         REMOTE_SERVICE_PATH = "${REMOTE_PATH}"
