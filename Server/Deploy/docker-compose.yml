@@ -9,6 +9,7 @@ services:
       - "7777:7777"
     environment:
       - TZ=Asia/Seoul
+      - ENCRYPTION_KEY=<ENCRYPTION_KEY>
     restart: always
     # volumes:
     #   - ./log:/log
