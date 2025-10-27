@@ -26,5 +26,35 @@ pipeline {
 
             }
         }
-    }
+
+        stage('Ssh transfer and docker restart') {
+            steps{
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'oracle_cloud',
+                transfers: [
+                    sshTransfer(cleanRemote: false, excludes: '',
+                    execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
+                    remoteDirectory: "${REMOTE_PATH}",
+                    remoteDirectorySDF: false,
+                    removePrefix: "Server/Deploy",
+                    sourceFiles: "Server/Deploy/docker-compose.yml") ,
+
+                    sshTransfer(cleanRemote: false, excludes: '',
+                    execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+',
+                    execCommand: """
+                        cd ${REMOTE_SERVICE_PATH}/Server/Deploy
+                        echo \"docker-compose down\" >> jenkins.log
+                        docker-compose down
+
+                        echo \"docker-compose up -d\" >> jenkins.log
+                        docker-compose up -d
+
+                        echo \"depoly end\" >> jenkins.log
+
+                        """)
+                    ],
+                    usePromotionTimestamp: false,
+                    useWorkspaceInPromotion: false, verbose: false)])
+            }
+        }
+    }    
 }
