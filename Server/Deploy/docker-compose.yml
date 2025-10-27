@@ -11,6 +11,8 @@ services:
       - TZ=Asia/Seoul
       - ENCRYPTION_KEY=<ENCRYPTION_KEY>
     restart: always
+    # TODO : 추후 삭제예정
+    tty: true
     # volumes:
     #   - ./log:/log
 
