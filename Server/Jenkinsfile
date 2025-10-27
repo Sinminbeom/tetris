@@ -4,8 +4,9 @@ pipeline {
         GIT_URI= "https://github.com/Sinminbeom/tetris.git"
         PROJECT_NAME = "tetris-server"
         DOCKER_TAG = "1.0.${currentBuild.number}"
-        REMOTE_PATH= "infra_glue/${PROJECT_NAME}"
-        REMOTE_SERVICE_PATH= "${REMOTE_PATH}"
+        REMOTE_PATH= "project/infra_glue/${PROJECT_NAME}"
+        REMOTE_SERVICE_PATH = "${REMOTE_PATH}"
+        ENCRYPTION_KEY = credentials('ENCRYPTION_KEY')
     }
     parameters {
         gitParameter branchFilter: 'origin/(.*)', defaultValue: 'main', name: 'BRANCH', type: 'PT_BRANCH', sortMode: 'DESCENDING_SMART', listSize: '5'
@@ -23,6 +24,7 @@ pipeline {
 
                 sh "sed -i 's/<PROJECT_NAME>/${PROJECT_NAME}/g' ./Server/Deploy/docker-compose.yml"
                 sh "sed -i 's/<BUILD_VER>/${DOCKER_TAG}/g' ./Server/Deploy/docker-compose.yml"
+                sh "sed -i 's/<ENCRYPTION_KEY>/${ENCRYPTION_KEY}/g' ./Server/Deploy/docker-compose.yml"
 
             }
         }
