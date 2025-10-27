@@ -34,6 +34,9 @@ namespace GameServer
 
             connStr = DecryptCredentials(connStr, key);
 
+            Console.WriteLine($"key = {key}");
+            Console.WriteLine($"connStr = {connStr}");
+
             //options
             //	.UseLoggerFactory(_logger)
             //	.UseSqlServer(ConfigManager.Config.connectionString);
