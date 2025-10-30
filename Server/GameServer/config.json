@@ -1,6 +1,6 @@
 {
 	"dataPath": "../../../../../Client/Assets/@Resources/Data",
-	"ip": "127.0.0.1",
+	"ip": "tetris",
 	"port": "7777",
-	"connectionString": "Server=152.67.197.127;Port=3308;Database=GameDB;Uid=zROxKK6CytX4sGnbz/qN9t2dT1nGni+szpn8FHWZrcY=;Pwd=HDE6vx6MXgl/nKW3gaNQFI5dLom599dff0mlf8rCsws=;"
+	"connectionString": "Server=infra-node-mariadb-mariadb-1;Port=3308;Database=GameDB;Uid=zROxKK6CytX4sGnbz/qN9t2dT1nGni+szpn8FHWZrcY=;Pwd=HDE6vx6MXgl/nKW3gaNQFI5dLom599dff0mlf8rCsws=;"
 }
