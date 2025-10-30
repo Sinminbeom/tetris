@@ -14,18 +14,18 @@ class PacketHandler
 {
     ///////////////////////////////////// Client - Game Server /////////////////////////////////////
    
-	public static void C_EnterGameHandler(PacketSession session, IMessage packet)
+	public static void C_EnterRoomHandler(PacketSession session, IMessage packet)
 	{
-		C_EnterGame enterGamePacket = (C_EnterGame)packet;
+		C_EnterRoom enterRoomPacket = (C_EnterRoom)packet;
 		ClientSession clientSession = (ClientSession)session;
-		clientSession.HandleEnterGame(enterGamePacket);
+		clientSession.HandleEnterRoom(enterRoomPacket);
 	}
 
-    public static void C_LeaveGameHandler(PacketSession session, IMessage packet)
+    public static void C_LeaveRoomHandler(PacketSession session, IMessage packet)
     {
-        C_LeaveGame leaveGamePacket = (C_LeaveGame)packet;
+        C_LeaveRoom leaveRoomPacket = (C_LeaveRoom)packet;
         ClientSession clientSession = (ClientSession)session;
-        clientSession.HandleLeaveGame(leaveGamePacket);
+        clientSession.HandleLeaveRoom(leaveRoomPacket);
     }
 
     public static void C_MoveHandler(PacketSession session, IMessage packet)

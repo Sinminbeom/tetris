@@ -99,15 +99,14 @@ public class UI_LobbyScene : UI_Scene
         //Managers.Game.SelectedHeroIndex = _selectedHeroIndex;
         //Managers.Scene.LoadScene(EScene.GameScene);
 
-        Managers.GameRoom.SelectedRoomIndex = _selectedRoomIndex;
+        Managers.Room.SelectedRoomIndex = _selectedRoomIndex;
 
         UI_RoomPopup roomPopup = Managers.UI.ShowPopupUI<UI_RoomPopup>();
 		roomPopup.SetInfo(SendRoomListReqPacket);
 
-        C_EnterGame enterGame = new C_EnterGame();
-		enterGame.RoomIndex = _selectedRoomIndex;
-
-		Managers.Network.Send(enterGame);
+        C_EnterRoom enterRoom = new C_EnterRoom();
+        enterRoom.RoomIndex = _selectedRoomIndex;
+		Managers.Network.Send(enterRoom);
     }
 
 	void OnClickCreateRoomButton(PointerEventData evt)

@@ -77,60 +77,77 @@ class PacketHandler
         lobbyScene.OnRoomListResHandler(roomListRes);
     }
 
-    public static void S_EnterGameHandler(PacketSession session, IMessage packet)
+    public static void S_EnterRoomHandler(PacketSession session, IMessage packet)
     {
         UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
 
         if (roomPopup == null)
             return;
 
-        S_EnterGame enterGame = (S_EnterGame)packet;
-        roomPopup.OnEnterGameHandler(enterGame);
+        S_EnterRoom enterRoom = (S_EnterRoom)packet;
+        roomPopup.OnEnterRoomHandler(enterRoom);
 
     }
 
-    public static void S_JoinGameHandler(PacketSession session, IMessage packet)
+    public static void S_JoinRoomHandler(PacketSession session, IMessage packet)
     {
         UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
 
-        if (roomPopup == null)
-            return;
+        S_JoinRoom joinRoom = (S_JoinRoom)packet;
 
-        S_JoinGame joinGame = (S_JoinGame)packet;
-        roomPopup.OnJoinGameHandler(joinGame);
+        if (roomPopup == null)
+        {
+            Managers.Room.JoinRoom(joinRoom);
+        }
+        else
+        {
+            roomPopup.OnJoinRoomHandler(joinRoom);
+        }
     }
 
-    public static void S_LeaveGameHandler(PacketSession session, IMessage packet)
+    public static void S_LeaveRoomHandler(PacketSession session, IMessage packet)
     {
         UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
 
         if (roomPopup == null)
             return;
 
-        S_LeaveGame leaveGame = (S_LeaveGame)packet;
-        roomPopup.OnLeaveGameHandler(leaveGame);
+        S_LeaveRoom leaveRoom = (S_LeaveRoom)packet;
+        roomPopup.OnLeaveRoomHandler(leaveRoom);
     }
 
     public static void S_LeavePlayerHandler(PacketSession session, IMessage packet)
     {
         UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
 
-        if (roomPopup == null)
-            return;
-
         S_LeavePlayer leavePlayer = (S_LeavePlayer)packet;
-        roomPopup.OnLeavePlayerHandler(leavePlayer);
+
+        if (roomPopup == null)
+        {
+            Managers.Room.LeavePlayer(leavePlayer);
+        }
+        else
+        {
+            roomPopup.OnLeavePlayerHandler(leavePlayer);
+        }
     }
 
     public static void S_PlayerStateHandler(PacketSession session, IMessage packet)
     {
         UI_RoomPopup roomPopup = Managers.UI.GetLastPopupUI<UI_RoomPopup>();
 
-        if (roomPopup == null)
-            return;
-
         S_PlayerState playerState = (S_PlayerState)packet;
-        roomPopup.OnPlayerStateHandler(playerState);
+
+        if (roomPopup == null)
+        {
+            Managers.Room.PlayerState(playerState);
+        }
+        else
+        {
+            roomPopup.OnPlayerStateHandler(playerState);
+        }
+
+
     }
 
     public static void S_StartGameHandler(PacketSession session, IMessage packet)
@@ -147,32 +164,32 @@ class PacketHandler
     public static void S_SpawnTetrominoHandler(PacketSession session, IMessage packet)
     {
         S_SpawnTetromino spawnTetromino = (S_SpawnTetromino)packet;
-        Managers.GameRoom.EnemyPlayer.Board.Spawn(spawnTetromino.TetrominoType);
+        Managers.Room.EnemyPlayer.Board.Spawn(spawnTetromino.TetrominoType);
     }
 
     public static void S_MoveTetrominoHandler(PacketSession session, IMessage packet)
     {
         S_MoveTetromino moveTetromino = (S_MoveTetromino)packet;
 
-        int x = moveTetromino.PositionInfo.PosX - Managers.GameRoom.MyPlayer.Board.Pos.x + Managers.GameRoom.EnemyPlayer.Board.Pos.x;
-        int y = moveTetromino.PositionInfo.PosY - Managers.GameRoom.MyPlayer.Board.Pos.y + Managers.GameRoom.EnemyPlayer.Board.Pos.y;
+        int x = moveTetromino.PositionInfo.PosX - Managers.Room.MyPlayer.Board.Pos.x + Managers.Room.EnemyPlayer.Board.Pos.x;
+        int y = moveTetromino.PositionInfo.PosY - Managers.Room.MyPlayer.Board.Pos.y + Managers.Room.EnemyPlayer.Board.Pos.y;
         Vector3 vector3 = new Vector3(x, y, 0);
 
-        Managers.GameRoom.EnemyPlayer.Board.SyncMove(vector3, moveTetromino.PositionInfo.IsRotation);
+        Managers.Room.EnemyPlayer.Board.SyncMove(vector3, moveTetromino.PositionInfo.IsRotation);
     }
 
     public static void S_LockBlockHandler(PacketSession session, IMessage packet)
     {
         S_LockBlock lockBlock = (S_LockBlock)packet;
 
-        Managers.GameRoom.EnemyPlayer.Board.SyncAddObject();
+        Managers.Room.EnemyPlayer.Board.SyncAddObject();
     }
 
     public static void S_ClearRowsHandler(PacketSession session, IMessage packet)
     {
         S_ClearRows clearRows = (S_ClearRows)packet;
 
-        Managers.GameRoom.EnemyPlayer.Board.ClearRows(clearRows.Rows.ToList());
+        Managers.Room.EnemyPlayer.Board.ClearRows(clearRows.Rows.ToList());
     }
 
     public static void S_GameOverHandler(PacketSession session, IMessage packet)
@@ -182,7 +199,7 @@ class PacketHandler
         UI_GameOverPopup gameOverPopup = Managers.UI.ShowPopupUI<UI_GameOverPopup>();
         gameOverPopup.OnGameOver(true);
 
-        MyTetromino myTetromino = (MyTetromino)Managers.GameRoom.MyPlayer.Board.Tetromino;
+        MyTetromino myTetromino = (MyTetromino)Managers.Room.MyPlayer.Board.Tetromino;
         myTetromino.ChangeState((int)E_TETROMINO_STATE.Idle);
     }
 }

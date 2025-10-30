@@ -54,7 +54,7 @@ namespace GameServer
 
         public List<GameRoom> ToList()
         {
-            return _roomList;
+            return _roomList.ToList();
         }
     }
 }
