@@ -27,15 +27,14 @@ public class UI_GameOverPopup : UI_Popup
 
         GetButton((int)Buttons.CloseButton).gameObject.BindEvent(OnClickCloseButton);
 
-        GetText((int)Texts.ResultLabelText).text = "Result";
+        GetText((int)Texts.ResultLabelText).text = "";
     }
 
     public void OnGameOver(bool isWin)
     {
         GetText((int)Texts.ResultLabelText).text = isWin ? "You Win!" : "You Lose!";
 
-        Managers.Player.MyPlayerInfo.State = EPlayerState.NotReady;
-        Managers.Player.EnemyPlayerInfo.State = EPlayerState.NotReady;
+        Managers.Room.GameOver();
     }
 
     public void OnClickCloseButton(PointerEventData evt)
@@ -45,9 +44,9 @@ public class UI_GameOverPopup : UI_Popup
         Managers.Scene.LoadScene(Define.EScene.LobbyScene);
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        C_EnterGame enterGame = new C_EnterGame();
-        enterGame.RoomIndex = Managers.GameRoom.SelectedRoomIndex;
-        Managers.Network.Send(enterGame);
+        C_EnterRoom enterRoom = new C_EnterRoom();
+        enterRoom.RoomIndex = Managers.Room.SelectedRoomIndex;
+        Managers.Network.Send(enterRoom);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)

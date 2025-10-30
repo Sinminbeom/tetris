@@ -55,28 +55,28 @@ message S_RoomListRes
 	repeated RoomInfo rooms = 1;
 }
 
-message C_EnterGame 
+message C_EnterRoom
 {
 	int32 roomIndex = 1;
 }
 
-message S_EnterGame 
+message S_EnterRoom
 {
 	RoomInfo roomInfo = 1;
 	repeated PlayerInfo playerInfos = 2;
 }
 
-message S_JoinGame
+message S_JoinRoom
 {
 	PlayerInfo playerInfo = 1;
 }
 
-message C_LeaveGame
+message C_LeaveRoom
 {
 	int32 roomIndex = 1;
 }
 
-message S_LeaveGame
+message S_LeaveRoom
 {
 }
 

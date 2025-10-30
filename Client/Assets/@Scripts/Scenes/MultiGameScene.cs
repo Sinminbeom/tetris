@@ -10,7 +10,7 @@ public class MultiGameScene : BaseScene
         Debug.Log("@>> MultiGameScene Init()");
         SceneType = EScene.MultiGameScene;
 
-        Managers.GameRoom.StartGame();
+        Managers.Room.StartGame();
     }
 
 	protected override void Start()

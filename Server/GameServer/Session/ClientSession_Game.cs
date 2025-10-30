@@ -93,7 +93,7 @@ namespace Server
             });
         }
 
-        public void HandleEnterGame(C_EnterGame enterGamePacket)
+        public void HandleEnterRoom(C_EnterRoom enterGamePacket)
         {
             GameRoom gameRoom = GameLogic.Instance.FindByIndex(enterGamePacket.RoomIndex);
 
@@ -102,26 +102,26 @@ namespace Server
 
             gameRoom.EnterGame(Player);
 
-            S_EnterGame enterGame = new S_EnterGame();
-            enterGame.RoomInfo = gameRoom.RoomInfo;
+            S_EnterRoom enterRoom = new S_EnterRoom();
+            enterRoom.RoomInfo = gameRoom.RoomInfo;
 
             Player otherPlayer = gameRoom.GetOtherPlayer(Player);
 
             if (otherPlayer != null)
             {
-                enterGame.PlayerInfos.Add(otherPlayer.PlayerInfo);
+                enterRoom.PlayerInfos.Add(otherPlayer.PlayerInfo);
 
-                S_JoinGame joinGame = new S_JoinGame();
+                S_JoinRoom joinGame = new S_JoinRoom();
                 joinGame.PlayerInfo = Player.PlayerInfo;
                 otherPlayer.Session.Send(joinGame);
             }
 
-            Send(enterGame);
+            Send(enterRoom);
         }
 
-        public void HandleLeaveGame(C_LeaveGame leaveGamePacket)
+        public void HandleLeaveRoom(C_LeaveRoom leaveRoomPacket)
         {
-            GameRoom gameRoom = GameLogic.Instance.FindByIndex(leaveGamePacket.RoomIndex);
+            GameRoom gameRoom = GameLogic.Instance.FindByIndex(leaveRoomPacket.RoomIndex);
 
             if (gameRoom == null)
                 return;
@@ -129,13 +129,10 @@ namespace Server
             gameRoom.LeaveGame(Player);
 
             // 나 자신
-            S_LeaveGame leaveGame = new S_LeaveGame();
+            S_LeaveRoom leaveGame = new S_LeaveRoom();
             Send(leaveGame);
 
             Player otherPlayer = gameRoom.GetOtherPlayer(Player);
-
-            //if (otherPlayer == null)
-            //    return;
 
             if (otherPlayer == null)
             {

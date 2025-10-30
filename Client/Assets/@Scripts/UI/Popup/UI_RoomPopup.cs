@@ -46,47 +46,28 @@ public class UI_RoomPopup : UI_Popup
 
     public void OnCreateRoomResHandler(S_CreateRoomRes createRoomRes)
     {
-        Managers.GameRoom.MyPlayerInfo = Managers.Player.MyPlayerInfo;
-        Managers.GameRoom.RoomInfo = createRoomRes.RoomInfo;
+        Managers.Room.CreateRoom(createRoomRes);
 
         RefreshUI();
     }
 
-    public void OnEnterGameHandler(S_EnterGame enterGame)
+    public void OnEnterRoomHandler(S_EnterRoom enterRoom)
     {
-        Managers.GameRoom.RoomInfo = enterGame.RoomInfo;
-
-        Managers.GameRoom.MyPlayerInfo = Managers.Player.MyPlayerInfo;
-
-        List<PlayerInfo> playerInfos = enterGame.PlayerInfos.ToList();
-
-        if (playerInfos.Count > 0)
-        {
-            Managers.Player.EnemyPlayerInfo = playerInfos[0];
-            Managers.GameRoom.EnemyPlayerInfo = Managers.Player.EnemyPlayerInfo;
-        }
+        Managers.Room.EnterRoom(enterRoom);
 
         RefreshUI();
     }
 
-    public void OnJoinGameHandler(S_JoinGame joinGame)
+    public void OnJoinRoomHandler(S_JoinRoom joinRoom)
     {
-        Managers.Player.EnemyPlayerInfo = joinGame.PlayerInfo;
-        Managers.GameRoom.EnemyPlayerInfo = Managers.Player.EnemyPlayerInfo;
+        Managers.Room.JoinRoom(joinRoom);
 
         RefreshUI();
     }
 
-    public void OnLeaveGameHandler(S_LeaveGame leaveGame)
+    public void OnLeaveRoomHandler(S_LeaveRoom leaveGame)
     {
-        Managers.GameRoom.SelectedRoomIndex = 0;
-        Managers.GameRoom.RoomInfo = null;
-
-        Managers.GameRoom.EnemyPlayer = null;
-        Managers.GameRoom.EnemyPlayerInfo = null;
-
-        Managers.GameRoom.MyPlayer = null;
-        Managers.GameRoom.MyPlayerInfo = null;
+        Managers.Room.LeaveRoom(leaveGame);
 
         _onClosePopup?.Invoke();
         ClosePopupUI();
@@ -94,30 +75,21 @@ public class UI_RoomPopup : UI_Popup
 
     public void OnLeavePlayerHandler(S_LeavePlayer leavePlayer)
     {
-        Managers.Player.EnemyPlayerInfo = null;
-        Managers.GameRoom.EnemyPlayerInfo = null;
-        Managers.GameRoom.EnemyPlayer = null;
+        Managers.Room.LeavePlayer(leavePlayer);
 
         RefreshUI();
     }
 
     public void OnPlayerStateHandler(S_PlayerState playerState)
     {
-        Managers.Player.EnemyPlayerInfo = playerState.PlayerInfo;
-        Managers.GameRoom.EnemyPlayerInfo = Managers.Player.EnemyPlayerInfo;
+        Managers.Room.PlayerState(playerState);
 
         RefreshUI();
     }
 
     public void OnStartGameHandler(S_StartGame startGame)
     {
-        Managers.GameRoom.RoomInfo = startGame.RoomInfo;
-
-        Managers.Player.MyPlayerInfo.State = EPlayerState.Playing;
-        Managers.Player.EnemyPlayerInfo.State = EPlayerState.Playing;
-
-        Managers.GameRoom.MyPlayerInfo = Managers.Player.MyPlayerInfo;
-        Managers.GameRoom.EnemyPlayerInfo = Managers.Player.EnemyPlayerInfo;
+        Managers.Room.RoomInfo = startGame.RoomInfo;
 
         Managers.Scene.LoadScene(Define.EScene.MultiGameScene);
     }
@@ -129,9 +101,9 @@ public class UI_RoomPopup : UI_Popup
 
     void OnClickCloseButton(PointerEventData evt)
     {
-        C_LeaveGame leaveGame = new C_LeaveGame();
-        leaveGame.RoomIndex = Managers.GameRoom.SelectedRoomIndex;
-        Managers.Network.Send(leaveGame);
+        C_LeaveRoom leaveRoom = new C_LeaveRoom();
+        leaveRoom.RoomIndex = Managers.Room.SelectedRoomIndex;
+        Managers.Network.Send(leaveRoom);
     }
 
     public void OnClickStartButton(PointerEventData evt)
@@ -154,14 +126,14 @@ public class UI_RoomPopup : UI_Popup
     public void RefreshUI()
     {
         // 방 이름
-        GetText((int)Texts.RoomNameLabelText).text = Managers.GameRoom.RoomInfo?.Name ?? "";
+        GetText((int)Texts.RoomNameLabelText).text = Managers.Room.RoomInfo?.Name ?? "";
 
         // 내 플레이어 이름
-        var myInfo = Managers.GameRoom.MyPlayerInfo;
+        var myInfo = Managers.Room.MyPlayerInfo;
         GetText((int)Texts.MyPlayerLabelText).text = myInfo?.Name ?? "";
 
         // 상대 플레이어 이름
-        var enemyInfo = Managers.GameRoom.EnemyPlayerInfo;
+        var enemyInfo = Managers.Room.EnemyPlayerInfo;
         GetText((int)Texts.EnemyPlayerLabelText).text = enemyInfo?.Name ?? "";
 
         // 내 Ready 표시

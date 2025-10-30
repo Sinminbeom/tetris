@@ -15,11 +15,11 @@ public enum MsgId
 	S_CreateRoomRes = 7,
 	C_RoomListReq = 8,
 	S_RoomListRes = 9,
-	C_EnterGame = 10,
-	S_EnterGame = 11,
-	S_JoinGame = 12,
-	C_LeaveGame = 13,
-	S_LeaveGame = 14,
+	C_EnterRoom = 10,
+	S_EnterRoom = 11,
+	S_JoinRoom = 12,
+	C_LeaveRoom = 13,
+	S_LeaveRoom = 14,
 	S_LeavePlayer = 15,
 	C_PlayerState = 16,
 	S_PlayerState = 17,
@@ -65,12 +65,12 @@ class PacketManager
 		_handler.Add((ushort)MsgId.S_CreateRoomRes, PacketHandler.S_CreateRoomResHandler);		
 		_onRecv.Add((ushort)MsgId.S_RoomListRes, MakePacket<S_RoomListRes>);
 		_handler.Add((ushort)MsgId.S_RoomListRes, PacketHandler.S_RoomListResHandler);		
-		_onRecv.Add((ushort)MsgId.S_EnterGame, MakePacket<S_EnterGame>);
-		_handler.Add((ushort)MsgId.S_EnterGame, PacketHandler.S_EnterGameHandler);		
-		_onRecv.Add((ushort)MsgId.S_JoinGame, MakePacket<S_JoinGame>);
-		_handler.Add((ushort)MsgId.S_JoinGame, PacketHandler.S_JoinGameHandler);		
-		_onRecv.Add((ushort)MsgId.S_LeaveGame, MakePacket<S_LeaveGame>);
-		_handler.Add((ushort)MsgId.S_LeaveGame, PacketHandler.S_LeaveGameHandler);		
+		_onRecv.Add((ushort)MsgId.S_EnterRoom, MakePacket<S_EnterRoom>);
+		_handler.Add((ushort)MsgId.S_EnterRoom, PacketHandler.S_EnterRoomHandler);		
+		_onRecv.Add((ushort)MsgId.S_JoinRoom, MakePacket<S_JoinRoom>);
+		_handler.Add((ushort)MsgId.S_JoinRoom, PacketHandler.S_JoinRoomHandler);		
+		_onRecv.Add((ushort)MsgId.S_LeaveRoom, MakePacket<S_LeaveRoom>);
+		_handler.Add((ushort)MsgId.S_LeaveRoom, PacketHandler.S_LeaveRoomHandler);		
 		_onRecv.Add((ushort)MsgId.S_LeavePlayer, MakePacket<S_LeavePlayer>);
 		_handler.Add((ushort)MsgId.S_LeavePlayer, PacketHandler.S_LeavePlayerHandler);		
 		_onRecv.Add((ushort)MsgId.S_PlayerState, MakePacket<S_PlayerState>);
