@@ -13,5 +13,5 @@ RUN dotnet build
 
 RUN chmod +x EntryPoint.sh
 
-ENTRYPOINT ["EntryPoint.sh"]
+ENTRYPOINT ["./EntryPoint.sh"]
 CMD ["dotnet", "run"]
