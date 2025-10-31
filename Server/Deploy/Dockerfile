@@ -11,4 +11,7 @@ RUN sed -i '/<Target Name="PreBuild"/,/<\/Target>/d' GameServer.csproj \
 
 RUN dotnet build
 
+RUN chmod +x EntryPoint.sh
+
+ENTRYPOINT ["EntryPoint.sh"]
 CMD ["dotnet", "run"]
