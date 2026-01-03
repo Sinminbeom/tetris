@@ -202,5 +202,10 @@ class PacketHandler
         MyTetromino myTetromino = (MyTetromino)Managers.Room.MyPlayer.Board.Tetromino;
         myTetromino.ChangeState((int)E_TETROMINO_STATE.Idle);
     }
+
+    public static void S_PongHandler(PacketSession session, IMessage packet)
+    {
+
+    }
 }
 

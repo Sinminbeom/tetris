@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 using Google.Protobuf;
+using Google.Protobuf.Protocol;
 
 public enum EServerType
 {
@@ -14,6 +15,10 @@ public class ServerInstance
 {
 	ServerSession _session = null;
 	Connector _connector = new Connector();
+	long _lastHeartbeatTick = 0;
+	const int LOBBY_HEARTBEAT_MS = 20000; // 20s
+	const int INROOM_HEARTBEAT_MS = 5000; // 5s
+
 
 	public bool IsConnected()
 	{
@@ -32,6 +37,7 @@ public class ServerInstance
 	public void Connect(IPEndPoint endPoint, Action onSuccessCallback = null, Action onFailedCallback = null)
 	{
 		_session = new ServerSession();
+		_lastHeartbeatTick = 0;
 		_connector.OnSuccessCallback = () => { PushAction(onSuccessCallback); _connector.OnSuccessCallback = null; };
 		_connector.OnFailedCallback = () => { PushAction(onFailedCallback); _connector.OnFailedCallback = null; };
 		_connector.Connect(endPoint, () => { return _session; });
@@ -52,7 +58,23 @@ public class ServerInstance
 			if (handler != null)
 				handler.Invoke(_session, packet.Message);
 		}
+		SendHeartbeatIfNeeded();
 	}
+
+	void SendHeartbeatIfNeeded()
+	{
+		if (_session == null || !_session.IsConnected())
+			return;
+
+		int interval = (Managers.Room != null && Managers.Room.RoomInfo != null) ? INROOM_HEARTBEAT_MS : LOBBY_HEARTBEAT_MS;
+		long now = Environment.TickCount;
+		if (now - _lastHeartbeatTick >= interval)
+		{
+			_session.Send(new C_Ping());
+			_lastHeartbeatTick = now;
+		}
+	}
+
 
 	public void Disconnect()
 	{
@@ -60,6 +82,7 @@ public class ServerInstance
 			_session.Disconnect();
 
 		_session = null;
+		_lastHeartbeatTick = 0;
 	}
 
 	#region ActionQueue

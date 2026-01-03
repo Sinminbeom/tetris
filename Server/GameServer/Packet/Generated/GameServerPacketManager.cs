@@ -34,6 +34,8 @@ public enum MsgId
 	S_ClearRows = 26,
 	C_GameOver = 27,
 	S_GameOver = 28,
+	C_Ping = 29,
+	S_Pong = 30,
 }
 
 class PacketManager
@@ -78,7 +80,9 @@ class PacketManager
 		_onRecv.Add((ushort)MsgId.C_ClearRows, MakePacket<C_ClearRows>);
 		_handler.Add((ushort)MsgId.C_ClearRows, PacketHandler.C_ClearRowsHandler);		
 		_onRecv.Add((ushort)MsgId.C_GameOver, MakePacket<C_GameOver>);
-		_handler.Add((ushort)MsgId.C_GameOver, PacketHandler.C_GameOverHandler);
+		_handler.Add((ushort)MsgId.C_GameOver, PacketHandler.C_GameOverHandler);		
+		_onRecv.Add((ushort)MsgId.C_Ping, MakePacket<C_Ping>);
+		_handler.Add((ushort)MsgId.C_Ping, PacketHandler.C_PingHandler);
 	}
 
 	public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)

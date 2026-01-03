@@ -25,9 +25,18 @@ namespace Server
 
 		static void GameLogicTask()
 		{
+			long lastSweepTick = 0;
 			while (true)
 			{
 				GameLogic.Instance.Update();
+
+				// 강제 종료/네트워크 단절 대비: 유휴 세션을 주기적으로 정리하여 룸 퇴장을 서버에서 확정
+				long now = Environment.TickCount64;
+				if (now - lastSweepTick >= 1000)
+				{
+					SessionManager.Instance.SweepIdleSessions();
+					lastSweepTick = now;
+				}
 				Thread.Sleep(0);
 			}
 		}
