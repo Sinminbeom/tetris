@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Google.Protobuf.Protocol;
 
 public class Managers : MonoBehaviour
 {
     public static bool Initialized { get; set; }
-    private static Managers s_instance; // ���ϼ��� ����ȴ�
-    public static Managers Instance { get { Init(); return s_instance; } } // ������ �Ŵ����� �����´�
+    private static Managers s_instance; // 유일성이 보장된다
+    public static Managers Instance { get { Init(); return s_instance; } } // 유일한 매니저를 갖고온다
 
     #region Contents
 
@@ -59,6 +60,35 @@ public class Managers : MonoBehaviour
     {
         _network?.Update();
     }
+
+
+	void OnApplicationPause(bool pause)
+	{
+		if (!pause)
+			return;
+
+		BestEffortLeaveRoom();
+	}
+
+	void OnApplicationQuit()
+	{
+		BestEffortLeaveRoom();
+	}
+
+	void BestEffortLeaveRoom()
+	{
+		// 강제 종료/백그라운드 전환에서는 전송이 보장되지 않습니다.
+		// 다만 가능한 경우 서버가 즉시 룸 정리를 할 수 있도록 LeaveRoom을 best-effort로 송신합니다.
+		if (_network == null)
+			return;
+		if (!_network.GameServer.IsConnected())
+			return;
+		if (Room == null || Room.RoomInfo == null)
+			return;
+
+		var leave = new C_LeaveRoom { RoomIndex = Room.RoomInfo.RoomId };
+		_network.Send(leave);
+	}
 
     public static void Clear()
     {

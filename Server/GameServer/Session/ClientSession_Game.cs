@@ -95,158 +95,186 @@ namespace Server
 
         public void HandleEnterRoom(C_EnterRoom enterGamePacket)
         {
-            GameRoom gameRoom = GameLogic.Instance.FindByIndex(enterGamePacket.RoomIndex);
-
-            if (gameRoom == null)
-                return;
-
-            gameRoom.EnterGame(Player);
-
-            S_EnterRoom enterRoom = new S_EnterRoom();
-            enterRoom.RoomInfo = gameRoom.RoomInfo;
-
-            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
-
-            if (otherPlayer != null)
+            // 룸/플레이어 상태는 GameLogic 쓰레드에서만 변경하도록 직렬화
+            GameLogic.Instance.Push(() =>
             {
-                enterRoom.PlayerInfos.Add(otherPlayer.PlayerInfo);
+                GameRoom gameRoom = GameLogic.Instance.FindByIndex(enterGamePacket.RoomIndex);
+                if (gameRoom == null || Player == null)
+                    return;
 
-                S_JoinRoom joinGame = new S_JoinRoom();
-                joinGame.PlayerInfo = Player.PlayerInfo;
-                otherPlayer.Session.Send(joinGame);
-            }
+                gameRoom.EnterGame(Player);
 
-            Send(enterRoom);
+                S_EnterRoom enterRoom = new S_EnterRoom();
+                enterRoom.RoomInfo = gameRoom.RoomInfo;
+
+                Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                if (otherPlayer != null)
+                {
+                    enterRoom.PlayerInfos.Add(otherPlayer.PlayerInfo);
+
+                    S_JoinRoom joinGame = new S_JoinRoom();
+                    joinGame.PlayerInfo = Player.PlayerInfo;
+                    otherPlayer.Session?.Send(joinGame);
+                }
+
+                Send(enterRoom);
+            });
         }
 
         public void HandleLeaveRoom(C_LeaveRoom leaveRoomPacket)
         {
-            GameRoom gameRoom = GameLogic.Instance.FindByIndex(leaveRoomPacket.RoomIndex);
-
-            if (gameRoom == null)
-                return;
-
-            gameRoom.LeaveGame(Player);
-
-            // 나 자신
-            S_LeaveRoom leaveGame = new S_LeaveRoom();
-            Send(leaveGame);
-
-            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
-
-            if (otherPlayer == null)
+            // 룸/플레이어 상태는 GameLogic 쓰레드에서만 변경하도록 직렬화
+            GameLogic.Instance.Push(() =>
             {
-                GameLogic.Instance.Remove(gameRoom.RoomInfo.RoomId);
-                return;
-            }
+                GameRoom gameRoom = GameLogic.Instance.FindByIndex(leaveRoomPacket.RoomIndex);
+                if (gameRoom == null || Player == null)
+                    return;
 
-            // 상대방
-            S_LeavePlayer leavePlayer = new S_LeavePlayer();
-            otherPlayer.Session.Send(leavePlayer);
+                Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                gameRoom.LeaveGame(Player);
+
+                // 나 자신
+                S_LeaveRoom leaveGame = new S_LeaveRoom();
+                Send(leaveGame);
+
+                if (otherPlayer == null)
+                {
+                    GameLogic.Instance.Remove(gameRoom.RoomInfo.RoomId);
+                    return;
+                }
+
+                // 상대방
+                S_LeavePlayer leavePlayer = new S_LeavePlayer();
+                otherPlayer.Session?.Send(leavePlayer);
+            });
         }
 
         public void HandlePlayerState(C_PlayerState playerStatePacket)
         {
-            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+            GameLogic.Instance.Push(() =>
+            {
+                if (Player == null || Player.Room == null)
+                    return;
 
-            if (gameRoom == null)
-                return;
+                GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+                if (gameRoom == null)
+                    return;
 
-            Player.PlayerInfo = playerStatePacket.PlayerInfo;
+                Player.PlayerInfo = playerStatePacket.PlayerInfo;
 
-            // 상대방 패킷 전송
-            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                // 상대방 패킷 전송
+                Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                if (otherPlayer != null)
+                {
+                    S_PlayerState playerState = new S_PlayerState();
+                    playerState.PlayerInfo = playerStatePacket.PlayerInfo;
+                    otherPlayer.Session?.Send(playerState);
+                }
 
-            if (otherPlayer == null)
-                return;
-
-            S_PlayerState playerState = new S_PlayerState();
-            playerState.PlayerInfo = playerStatePacket.PlayerInfo;
-            otherPlayer.Session.Send(playerState);
-
-            gameRoom.CheckAllReady();
+                gameRoom.CheckAllReady();
+            });
         }
 
         public void HandleSpawnTetromino(C_SpawnTetromino spawnTetrominoPacket)
         {
-            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+            GameLogic.Instance.Push(() =>
+            {
+                if (Player == null || Player.Room == null)
+                    return;
 
-            if (gameRoom == null)
-                return;
+                GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+                if (gameRoom == null)
+                    return;
 
-            Player.Board.Tetromino.type = spawnTetrominoPacket.TetrominoType;
+                Player.Board.Tetromino.type = spawnTetrominoPacket.TetrominoType;
 
-            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                if (otherPlayer == null)
+                    return;
 
-            if (otherPlayer == null)
-                return;
-
-            S_SpawnTetromino spawn = new S_SpawnTetromino();
-            spawn.TetrominoType = spawnTetrominoPacket.TetrominoType;
-
-            otherPlayer.Session.Send(spawn);
+                S_SpawnTetromino spawn = new S_SpawnTetromino();
+                spawn.TetrominoType = spawnTetrominoPacket.TetrominoType;
+                otherPlayer.Session?.Send(spawn);
+            });
         }
 
         public void HandleMoveTetromino(C_MoveTetromino moveTetrominoPacket)
         {
-            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+            GameLogic.Instance.Push(() =>
+            {
+                if (Player == null || Player.Room == null)
+                    return;
 
-            if (gameRoom == null)
-                return;
+                GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+                if (gameRoom == null)
+                    return;
 
-            Player.Board.Tetromino.positionInfo = moveTetrominoPacket.PositionInfo;
+                Player.Board.Tetromino.positionInfo = moveTetrominoPacket.PositionInfo;
 
-            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                if (otherPlayer == null)
+                    return;
 
-            if (otherPlayer == null)
-                return;
-
-            S_MoveTetromino moveTetromino = new S_MoveTetromino();
-            moveTetromino.PositionInfo = Player.Board.Tetromino.positionInfo;
-            otherPlayer.Session.Send(moveTetromino);
+                S_MoveTetromino moveTetromino = new S_MoveTetromino();
+                moveTetromino.PositionInfo = Player.Board.Tetromino.positionInfo;
+                otherPlayer.Session?.Send(moveTetromino);
+            });
         }
 
         public void HandleLockBlock(C_LockBlock lockBlockPacket)
         {
-            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+            GameLogic.Instance.Push(() =>
+            {
+                if (Player == null || Player.Room == null)
+                    return;
 
-            if (gameRoom == null)
-                return;
+                GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+                if (gameRoom == null)
+                    return;
 
-            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                if (otherPlayer == null)
+                    return;
 
-            if (otherPlayer == null)
-                return;
-
-            S_LockBlock lockBlock = new S_LockBlock();
-            otherPlayer.Session.Send(lockBlock);
+                S_LockBlock lockBlock = new S_LockBlock();
+                otherPlayer.Session?.Send(lockBlock);
+            });
         }
 
         public void HandleClearRows(C_ClearRows clearRowsPacket)
         {
-            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+            GameLogic.Instance.Push(() =>
+            {
+                if (Player == null || Player.Room == null)
+                    return;
 
-            if (gameRoom == null)
-                return;
+                GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+                if (gameRoom == null)
+                    return;
 
-            Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                Player otherPlayer = gameRoom.GetOtherPlayer(Player);
+                if (otherPlayer == null)
+                    return;
 
-            if (otherPlayer == null)
-                return;
-
-            S_ClearRows clearRows = new S_ClearRows();
-            clearRows.Rows.AddRange(clearRowsPacket.Rows);
-            otherPlayer.Session.Send(clearRows);
+                S_ClearRows clearRows = new S_ClearRows();
+                clearRows.Rows.AddRange(clearRowsPacket.Rows);
+                otherPlayer.Session?.Send(clearRows);
+            });
         }
 
         public void HandleGameOver(C_GameOver gameOverPacket)
         {
-            GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+            GameLogic.Instance.Push(() =>
+            {
+                if (Player == null || Player.Room == null)
+                    return;
 
-            if (gameRoom == null)
-                return;
+                GameRoom gameRoom = GameLogic.Instance.FindByRoomId(Player.Room.RoomInfo.RoomId);
+                if (gameRoom == null)
+                    return;
 
-            gameRoom.GameOver(Player);
+                gameRoom.GameOver(Player);
+            });
         }
 
         Player MakePlayerFromPlayerDb(PlayerDb playerDb)

@@ -12,7 +12,7 @@ using System.Numerics;
 
 class PacketHandler
 {
-    ///////////////////////////////////// Client - Game Server /////////////////////////////////////
+///////////////////////////////////// Client - Game Server /////////////////////////////////////
    
 	public static void C_EnterRoomHandler(PacketSession session, IMessage packet)
 	{
@@ -112,5 +112,11 @@ class PacketHandler
         C_GameOver gameOver = (C_GameOver)packet;
         ClientSession clientSession = (ClientSession)session;
         clientSession.HandleGameOver(gameOver);
+    }
+
+    public static void C_PingHandler(PacketSession session, IMessage packet)
+    {
+        ClientSession clientSession = (ClientSession)session;
+        clientSession.TouchRecv();
     }
 }
