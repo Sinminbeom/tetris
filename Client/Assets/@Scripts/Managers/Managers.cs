@@ -53,6 +53,8 @@ public class Managers : MonoBehaviour
 
             DontDestroyOnLoad(go);
             s_instance = go.GetComponent<Managers>();
+
+            s_instance._network.SetRunner(s_instance);
         }
     }
     // Update is called once per frame
@@ -64,11 +66,15 @@ public class Managers : MonoBehaviour
 
 	void OnApplicationPause(bool pause)
 	{
-		if (!pause)
-			return;
+        if (pause)
+        {
+            BestEffortLeaveRoom();
+            return;
+        }
 
-		BestEffortLeaveRoom();
-	}
+        // 포그라운드 복귀
+        _network?.TryAutoReconnect();
+    }
 
 	void OnApplicationQuit()
 	{

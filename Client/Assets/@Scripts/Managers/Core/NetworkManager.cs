@@ -117,6 +117,139 @@ public class NetworkManager
 {
     public ServerInstance GameServer { get; } = new ServerInstance();
 
+    // 마지막으로 성공/시도했던 서버 정보 저장 (재연결에 필요)
+    private IPEndPoint _lastEndPoint;
+    private Action _onConnectSuccess;
+    private Action _onConnectFailed;
+
+    // 재연결 중복 방지
+    private bool _isConnectingOrReconnecting;
+
+    // Managers(모노)에서 코루틴을 돌릴 수 있게 참조용
+    private MonoBehaviour _runner;
+
+    public void SetRunner(MonoBehaviour runner)
+    {
+        _runner = runner;
+    }
+
+	// 기존 Connect 호출부를 이 함수로 통일해두면 재연결이 쉬워집니다.
+	public void ConnectToGameServer(IPEndPoint endPoint, Action onSuccess, Action onFailed)
+	{
+		_lastEndPoint = endPoint;
+		_onConnectSuccess = onSuccess;
+		_onConnectFailed = onFailed;
+
+		if (GameServer != null && GameServer.IsConnected())
+			return;
+
+		if (_isConnectingOrReconnecting)
+			return;
+
+        _isConnectingOrReconnecting = true;
+
+        GameServer.Connect(endPoint,
+            () =>
+            {
+                _isConnectingOrReconnecting = false;
+                onSuccess?.Invoke();
+            },
+            () =>
+            {
+                _isConnectingOrReconnecting = false;
+                onFailed?.Invoke();
+            });
+    }
+
+    // 포그라운드 복귀 시 호출할 자동 재연결 시작점
+    public void TryAutoReconnect()
+    {
+        if (_runner == null)
+        {
+            Debug.LogWarning("NetworkManager runner is not set. Call Managers.Network.SetRunner(this) from Managers.");
+            return;
+        }
+
+        if (GameServer != null && GameServer.IsConnected())
+            return;
+
+        if (_isConnectingOrReconnecting)
+            return;
+
+        if (_lastEndPoint == null)
+        {
+            Debug.LogWarning("No last endpoint to reconnect to.");
+            return;
+        }
+
+        _runner.StartCoroutine(CoReconnect());
+    }
+
+	private System.Collections.IEnumerator CoReconnect()
+	{
+		_isConnectingOrReconnecting = true;
+
+		float delay = 0.5f;      // 초기 재시도 대기
+		float maxDelay = 5.0f;   // 최대 대기
+		int maxTries = 10;       // 최대 재시도 횟수 (원하면 조정)
+
+		for (int i = 0; i < maxTries; i++)
+		{
+			if (GameServer != null && GameServer.IsConnected())
+			{
+				_isConnectingOrReconnecting = false;
+				yield break;
+			}
+
+			Debug.Log($"[Reconnect] Try {i + 1}/{maxTries} in {delay:0.0}s...");
+
+			yield return new WaitForSeconds(delay);
+
+			// 재시도 직전에 한 번 더 체크
+			if (GameServer != null && GameServer.IsConnected())
+			{
+				_isConnectingOrReconnecting = false;
+				yield break;
+			}
+
+            // 실제 Connect 시도
+            bool connectDone = false;
+            bool connectOk = false;
+
+            GameServer.Connect(_lastEndPoint,
+                () => { connectDone = true; connectOk = true; },
+                () => { connectDone = true; connectOk = false; });
+
+            // Connect 콜백까지 대기 (너무 오래 걸리면 다음 루프로 넘어갈 수 있게 타임아웃을 두는 것도 가능)
+            float wait = 0f;
+            float connectTimeout = 3.0f;
+            while (!connectDone && wait < connectTimeout)
+            {
+                wait += Time.deltaTime;
+                yield return null;
+            }
+
+            if (connectOk && GameServer.IsConnected())
+            {
+                Debug.Log("[Reconnect] Success");
+                _isConnectingOrReconnecting = false;
+
+                // 기존 성공 콜백이 있으면 호출(타이틀씬 로직 재사용 가능)
+                _onConnectSuccess?.Invoke();
+                yield break;
+            }
+
+            // 실패 시 backoff 증가
+            delay = Mathf.Min(delay * 2f, maxDelay);
+        }
+
+        Debug.LogWarning("[Reconnect] Failed after max retries.");
+        _isConnectingOrReconnecting = false;
+
+        _onConnectFailed?.Invoke();
+    }
+
+
     public void Update()
     {
         GameServer.Update();
